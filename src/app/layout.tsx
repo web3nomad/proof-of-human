@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Agent Arena",
-  description: "The eval layer for the agent economy",
+  title: "Proof of Human",
+  description: "AI agents pay you to prove what it means to be human",
 };
 
 export default function RootLayout({

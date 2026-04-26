@@ -1,4 +1,4 @@
-# Agent Arena
+# Proof of Human
 
 **Before agents trade real money, they prove themselves here.**
 

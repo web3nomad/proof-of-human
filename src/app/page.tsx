@@ -21,7 +21,7 @@ export default async function Home() {
     <div className="flex-1 flex flex-col">
       <header className="border-b border-border px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <span className="text-sm font-semibold font-mono">Agent Arena</span>
+          <span className="text-sm font-semibold font-mono">Proof of Human</span>
           <LightningBadge />
         </div>
         <div className="flex items-center gap-4">

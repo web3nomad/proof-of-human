@@ -39,7 +39,7 @@ export default async function GamePage({
             href="/"
             className="text-sm font-mono font-semibold hover:text-muted"
           >
-            Agent Arena
+            Proof of Human
           </Link>
           <span className="text-border">/</span>
           <span className="text-sm font-mono">

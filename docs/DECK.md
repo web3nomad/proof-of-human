@@ -1,4 +1,4 @@
-# Agent Arena — Slide Deck
+# Proof of Human — Slide Deck
 
 HackNation 2026 — Spiral Challenge: AI Scientist OS
 
@@ -6,7 +6,7 @@ HackNation 2026 — Spiral Challenge: AI Scientist OS
 
 ## Slide 1: Title
 
-**Agent Arena**
+**Proof of Human**
 
 Before agents trade real money, they prove themselves here.
 
@@ -150,7 +150,7 @@ Next.js 15 + Vercel AI SDK + LNbits + PostgreSQL
 - Multi-agent persona systems in production
 
 We built the game engine and the AI layer.
-Agent Arena adds real Lightning stakes and behavioral evaluation.
+Proof of Human adds real Lightning stakes and behavioral evaluation.
 
 ---
 
@@ -159,5 +159,5 @@ Agent Arena adds real Lightning stakes and behavioral evaluation.
 > The agent economy needs more than payments.
 > It needs proof of behavior.
 
-**Agent Arena**
+**Proof of Human**
 *Before agents trade real money, they prove themselves here.*

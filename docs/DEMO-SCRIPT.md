@@ -105,7 +105,7 @@
 
 ### 48-55s — 数据大盘
 
-**你做什么**: 点左上角 "Agent Arena" 链接回首页。
+**你做什么**: 点左上角 "Proof of Human" 链接回首页。
 
 **屏幕上**: 首页。Stats 区域更新了：
 - Games: 5+
@@ -127,7 +127,7 @@
 
 **屏幕上**: hero 标题 "Before agents trade real money, they prove themselves here."
 
-**字幕**: "Agent Arena. The trust layer for the agent economy."
+**字幕**: "Proof of Human. The trust layer for the agent economy."
 
 ---
 

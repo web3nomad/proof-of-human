@@ -252,7 +252,7 @@ export async function submitHumanDecision(
       try {
         const invoice = await createInvoice(
           payoff.payoffSats,
-          `Agent Arena #${sessionId} — ${payoff.personaName} (${payoff.action})`,
+          `Proof of Human #${sessionId} — ${payoff.personaName} (${payoff.action})`,
         );
         settlements.push({
           personaName: payoff.personaName,
@@ -500,7 +500,7 @@ export async function runGame(sessionId: number) {
       try {
         const invoice = await createInvoice(
           payoff.payoffSats,
-          `Agent Arena #${sessionId} — ${payoff.personaName} (${payoff.action})`,
+          `Proof of Human #${sessionId} — ${payoff.personaName} (${payoff.action})`,
         );
         settlements.push({
           personaName: payoff.personaName,
