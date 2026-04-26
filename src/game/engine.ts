@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { ModelName } from "@/ai/provider";
+import { createInvoice } from "@/lib/lnbits";
 import { generateDecision, generateDiscussion } from "./agent";
 import { calculatePayoffs } from "./payoff";
 import {
@@ -170,14 +171,58 @@ export async function runGame(sessionId: number) {
     });
   }
 
+  const settlements: Array<{
+    personaName: string;
+    seatIndex: number;
+    amountSats: number;
+    paymentHash: string;
+    bolt11: string;
+  }> = [];
+
+  for (const payoff of payoffs) {
+    if (payoff.payoffSats > 0) {
+      try {
+        const invoice = await createInvoice(
+          payoff.payoffSats,
+          `Agent Arena #${sessionId} — ${payoff.personaName} (${payoff.action})`,
+        );
+        settlements.push({
+          personaName: payoff.personaName,
+          seatIndex: payoff.seatIndex,
+          amountSats: payoff.payoffSats,
+          paymentHash: invoice.payment_hash,
+          bolt11: invoice.payment_request,
+        });
+        await prisma.paymentRecord.create({
+          data: {
+            sessionId,
+            direction: "payout",
+            amountSats: payoff.payoffSats,
+            lnbitsPayment: JSON.parse(JSON.stringify(invoice)),
+            status: "invoice_created",
+          },
+        });
+      } catch (e) {
+        console.error(`Lightning invoice failed for ${payoff.personaName}:`, e);
+      }
+    }
+  }
+
+  if (settlements.length > 0) {
+    timeline = appendEvent(timeline, {
+      type: "settlement",
+      data: { settlements },
+    });
+  }
+
   await prisma.gameSession.update({
     where: { id: sessionId },
     data: {
       status: "settled",
       timeline: JSON.parse(JSON.stringify(timeline)),
-      result: JSON.parse(JSON.stringify({ payoffs })),
+      result: JSON.parse(JSON.stringify({ payoffs, settlements })),
     },
   });
 
-  return { timeline, payoffs };
+  return { timeline, payoffs, settlements };
 }

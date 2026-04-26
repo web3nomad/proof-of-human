@@ -20,6 +20,7 @@ export default async function GamePage({
   );
   const privateEvents = timeline.filter((e) => e.type === "reasoning");
   const payoffEvent = timeline.find((e) => e.type === "payoff");
+  const settlementEvent = timeline.find((e) => e.type === "settlement");
 
   return (
     <div className="flex-1 flex flex-col">
@@ -107,7 +108,7 @@ export default async function GamePage({
 
           {payoffEvent && (
             <section>
-              <h2 className="text-sm font-semibold mb-3">Settlement</h2>
+              <h2 className="text-sm font-semibold mb-3">Payoff</h2>
               <div className="border border-border rounded-lg p-4">
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   {(payoffEvent.data.payoffs as Array<{
@@ -124,6 +125,45 @@ export default async function GamePage({
                     </div>
                   ))}
                 </div>
+              </div>
+            </section>
+          )}
+
+          {settlementEvent && (
+            <section>
+              <h2 className="text-sm font-semibold mb-3">
+                Lightning Settlement
+              </h2>
+              <div className="border border-border rounded-lg divide-y divide-border">
+                {(settlementEvent.data.settlements as Array<{
+                  personaName: string;
+                  amountSats: number;
+                  paymentHash: string;
+                  bolt11: string;
+                }>).map((s, i) => (
+                  <div key={i} className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-semibold">{s.personaName}</span>
+                      <span className="text-sm font-semibold text-green-600">
+                        +{s.amountSats} sats
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-muted w-20 shrink-0">payment hash</span>
+                        <code className="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded truncate">
+                          {s.paymentHash}
+                        </code>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-muted w-20 shrink-0">bolt11</span>
+                        <code className="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded truncate max-w-md">
+                          {s.bolt11}
+                        </code>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
           )}

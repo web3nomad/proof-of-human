@@ -14,7 +14,7 @@ async function testModel(modelName: ModelName) {
     const { text } = await generateText({
       model: llm(modelName),
       prompt: "Say 'hello' and nothing else.",
-      maxTokens: 10,
+      maxOutputTokens: 10,
     });
     const ms = Date.now() - start;
     console.log(`✓ ${modelName} (${ms}ms): ${text.trim()}`);
