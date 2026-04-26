@@ -23,11 +23,11 @@ export function NewGameButton() {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5">
       <select
         value={gameType}
         onChange={(e) => setGameType(e.target.value as GameType)}
-        className="text-sm border border-border rounded-lg px-3 py-2 bg-white"
+        className="text-xs border border-border rounded px-2 py-1 bg-white text-muted"
       >
         <option value="golden_ball">Golden Ball</option>
         <option value="prisoners_dilemma">Prisoner&apos;s Dilemma</option>
@@ -35,9 +35,9 @@ export function NewGameButton() {
       <button
         onClick={handleCreate}
         disabled={loading}
-        className="text-sm bg-foreground text-background px-4 py-2 rounded-lg hover:opacity-90 disabled:opacity-50 transition-opacity"
+        className="text-xs text-muted border border-border px-2.5 py-1 rounded hover:bg-zinc-50 disabled:opacity-50 transition-colors"
       >
-        {loading ? "Creating..." : "New Game"}
+        {loading ? "..." : "AI vs AI"}
       </button>
     </div>
   );

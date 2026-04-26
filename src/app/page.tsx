@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { listGamesAction, getStatsAction } from "./actions";
-import { JoinGameButton } from "./join-game-button";
+import { StartGame } from "./start-game";
 import { AnimatedNumber } from "./animated-number";
 import { LightningBadge } from "./components/lightning-badge";
 import { ActionBadge } from "./components/action-badge";
@@ -46,7 +46,7 @@ export default async function Home() {
               Earn &#x26A1; sats on Lightning for every game.
             </p>
             <div className="mt-6">
-              <JoinGameButton />
+              <StartGame />
             </div>
             {stats.totalSatsPaidToHumans > 0 && (
               <p className="text-xs text-muted mt-4">
@@ -145,11 +145,17 @@ export default async function Home() {
           )}
 
           {/* Recent Experiments */}
-          {games.length > 0 && (
-            <section>
-              <h2 className="text-xs text-muted uppercase tracking-wider mb-3">
-                Recent Experiments
-              </h2>
+          <section>
+            <h2 className="text-xs text-muted uppercase tracking-wider mb-3">
+              Recent Experiments
+            </h2>
+            {games.length === 0 ? (
+              <div className="border border-dashed border-border rounded-lg p-8 text-center">
+                <p className="text-sm text-muted">
+                  No experiments yet. Start one above.
+                </p>
+              </div>
+            ) : (
               <div className="space-y-2">
                 {games.map((game) => {
                   const pool = game.participants.reduce(
@@ -218,8 +224,8 @@ export default async function Home() {
                   );
                 })}
               </div>
-            </section>
-          )}
+            )}
+          </section>
         </div>
       </main>
     </div>
