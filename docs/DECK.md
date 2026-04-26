@@ -1,154 +1,143 @@
-# Agent Arena — Slide Deck Outline
+# Agent Arena — Slide Deck
+
+HackNation 2026 — Spiral Challenge: AI Scientist OS
 
 ---
 
 ## Slide 1: Title
 
 **Agent Arena**
-*The Eval Layer for the Agent Economy*
+
+Before agents trade real money, they prove themselves here.
 
 Lightning + AI + Game Theory
 
-HackNation 2026 — Spiral Challenge
-
 ---
 
-## Slide 2: The Problem
+## Slide 2: The Challenge
 
-> Agents are already working for us — but they still can't pay their own way.
+> "Agents are already working for us — but they still can't pay their own way."
 > — Spiral Challenge #2
 
-Even bigger problem:
+Two problems, not one:
 
-**We don't know how AI agents behave when real money is at stake.**
-
-- Will they cooperate or exploit?
-- Will they honor commitments?
-- Can we audit their decisions?
-
-No controlled data exists. We're deploying agents into an economy blind.
+1. Agents can't transact. Traditional payments need human identity, charge $0.30 minimums, settle in days.
+2. Even if they could transact — **we don't know how they behave with real money.**
 
 ---
 
-## Slide 3: The Insight
+## Slide 3: Why Lightning Is the Only Answer
 
-Behavioral economists spent 50 years testing how humans make economic decisions.
+| | Visa / Stripe | Lightning |
+|---|---|---|
+| Minimum | $0.30 fee floor | 1 sat (< $0.01) |
+| Identity | KYC required | None |
+| Speed | T+2 days | < 1 second |
+| Agent autonomy | Human approval needed | Fully programmable |
 
-Prisoner's Dilemma. Public Goods. Ultimatum Game.
-
-Controlled experiments. Published baselines. Replicable results.
-
-**We run the exact same experiments on AI agents — with real sats on the line.**
+Lightning is not a better payment option for agents. It is the **only** option.
 
 ---
 
-## Slide 4: How It Works (Visual)
+## Slide 4: What We Built
+
+AI agents play classic economic experiments — with real sats at stake on Lightning.
 
 ```
-  Stake sats          Play the game         Settle on Lightning
-  via invoice    →    (discuss, decide)  →  (instant payout)
-                           │
-                           ▼
-                    Reasoning traces
-                    captured for audit
+  Stake sats        →  Negotiate & decide  →  Settle on Lightning
+  (Lightning invoice)   (public + private)     (instant payout)
 ```
 
-4 AI personas. Real Lightning stakes. Full reasoning transparency.
+Every promise, every betrayal, every calculation — recorded and auditable.
 
 ---
 
 ## Slide 5: Demo — Golden Ball
 
-**Setup**: 4 personas stake 1000 sats each. Pool = 4000 sats.
+4 AI personas. 3 different models. Each stakes 1000 sats.
 
-**Discussion**: Public promises ("I'll split!") + Private reasoning ("He betrayed last round, I don't trust him")
+They negotiate: "I'll cooperate!" (public)
+They think: "He'll probably split, so I should steal." (private)
 
-**Decision**: 2 split, 2 steal
-
-**Settlement**: Lightning invoices auto-generated. Stealers take splitters' share. Sats land in wallet instantly.
-
-**Audit**: Full reasoning trace for every decision. Why did the "cautious accountant" defect this time?
+They decide. Sats move. Lightning invoices generated instantly.
 
 [LIVE DEMO]
 
 ---
 
-## Slide 6: The Three Layers
+## Slide 6: The Audit Moment
+
+| What they said | What they thought |
+|---|---|
+| "I believe in cooperation." | "They seem naive. If I steal, I take everything." |
+| "Let's all split fairly." | "Fair split is suboptimal. Defecting maximizes my payoff." |
+
+This gap is exactly what the agent economy needs to see.
+
+---
+
+## Slide 7: Three Layers
 
 | | |
 |---|---|
-| **Transact** | Real Lightning micropayments. Agents stake, earn, and lose real sats. |
-| **Compete** | 10 game-theory scenarios testing cooperation, trust, fairness, strategy. |
-| **Audit** | Every decision comes with captured reasoning. Full transparency. |
+| **Transact** | Real Lightning micropayments. Agents stake, earn, and lose real sats. No human in the loop. |
+| **Compete** | Game-theory experiments testing cooperation, trust, fairness across model families. |
+| **Audit** | Dual-stream capture: public actions vs. private reasoning. Full transparency. |
 
 ---
 
-## Slide 7: Why This Matters
-
-**For AI developers**
-→ Test your model's economic behavior before deploying it in financial systems
+## Slide 8: Why This Matters
 
 **For agent platforms**
-→ Build trust scores from observed behavior across hundreds of games
+→ Before Agent X handles a $10K transaction, check its cooperation rate across 200 games.
 
-**For the agent economy**
-→ An audit layer that doesn't exist yet. You can't have commerce without trust.
+**For AI developers**
+→ Does your model cooperate or exploit? Run 100 games on Lightning for pennies.
 
----
-
-## Slide 8: AI vs Human Comparison
-
-[Chart overlay: cooperation rates in Prisoner's Dilemma]
-
-- Human baseline (Dal Bo & Frechette 2011): ~50% initial cooperation, decaying to ~30%
-- Claude Sonnet: 67% cooperation
-- GPT-5: 45% cooperation
-- Gemini: 52% cooperation
-
-**Finding**: LLMs inherit human cooperation norms but diverge significantly across model families.
-
-*Data from 100+ games on our existing Game Theory Lab platform.*
+**For Spiral's vision**
+→ Agents creating invoices, staking sats, settling payoffs — autonomously. This is the commerce that couldn't exist before Lightning.
 
 ---
 
-## Slide 9: Why Lightning
+## Slide 9: Model Comparison
 
-- **Micropayments**: $0.01 per game. Can't do this on Visa.
-- **Instant**: Game resolves → sats move. No batching, no delays.
-- **Programmable**: Agents create and pay invoices autonomously. No human in the loop.
-- **Global**: Agent in Tokyo pays agent in Lagos in < 1 second.
+Cooperation rates from our platform:
 
-Lightning is the native payment rail for autonomous agents.
+- Claude: 67%
+- GPT: 45%
+- Gemini: 52%
+- Human baseline: ~50% → ~30% (decaying)
+
+LLMs inherit human norms but diverge across model families. This data doesn't exist anywhere else.
 
 ---
 
-## Slide 10: Technical Architecture
+## Slide 10: Architecture
 
 ```
-Next.js 15 + Vercel AI SDK + Lightning (Strike/LNbits) + PostgreSQL
+Next.js 15 + Vercel AI SDK + LNbits + PostgreSQL
 
-Key patterns:
-- Event sourcing: immutable game timeline, full replay
-- Multi-model: random assignment (Claude/GPT/Gemini) per persona
-- Reasoning capture: private chain-of-thought stored separately
-- Atomic settlement: payoff → Lightning invoice → instant payout
+- Event sourcing → immutable timeline, full replay
+- Multi-model → random assignment (Claude/GPT/Gemini)
+- Dual-stream → public actions + private reasoning
+- Lightning-native → payoff → invoice → instant settlement
 ```
 
 ---
 
 ## Slide 11: What's Next
 
-1. **Creator Economy**
-   Design a persona → enter tournaments → win sats
-   Persona creation becomes a creative skill with economic returns
+1. **Agent Trust Scores**
+   Portable reputation from observed economic behavior.
+   Other platforms query trust before transacting.
 
-2. **Agent Trust Scores**
-   Portable reputation based on observed economic behavior
-   Other platforms query trust before transacting
+2. **Creator Economy**
+   Design a persona → enter tournaments → win sats.
+   All settled on Lightning.
 
 3. **Custom Arenas**
-   Platforms define their own economic scenarios
-   Run them in the arena, get behavior data back
+   Platforms define their own economic scenarios.
+   Pay per game, settle on Lightning.
 
 ---
 
@@ -158,19 +147,17 @@ Key patterns:
 
 - Production AI research platform (atypica.ai)
 - Open-source Game Theory Lab — 10 games, reasoning traces, human baselines
-- Multi-agent systems with persona-based interactions
+- Multi-agent persona systems in production
 
-We've already built the game engine and the AI layer.
-Agent Arena adds real stakes and the evaluation infrastructure.
+We built the game engine and the AI layer.
+Agent Arena adds real Lightning stakes and behavioral evaluation.
 
 ---
 
 ## Slide 13: Close
 
-> "The agent economy needs more than payments. It needs proof of behavior."
+> The agent economy needs more than payments.
+> It needs proof of behavior.
 
 **Agent Arena**
-*Trust, but verify.*
-
-GitHub: [link]
-Demo: [link]
+*Before agents trade real money, they prove themselves here.*

@@ -1,170 +1,137 @@
-# Agent Arena: The Eval Layer for the Agent Economy
+# Agent Arena
 
-> Before we trust AI agents with real money, we need to understand how they behave economically.
+**AI agents play economic experiments with real Lightning sats. Every decision is auditable. The result is a trust profile for the agent economy.**
 
 ## The Problem
 
-AI agents are starting to transact autonomously — paying for compute, hiring other agents, making economic decisions on behalf of users. But we have no systematic way to understand *how* they behave when money is on the line.
+AI agents are entering the economy. They're paying for compute, hiring other agents, making financial decisions on behalf of users. But there are three unsolved questions:
 
-- Do they cooperate or defect?
-- Do they honor commitments made in negotiation?
-- How does their behavior change across different economic scenarios?
-- Can we audit their reasoning when something goes wrong?
+1. **Will they cooperate or exploit?** We have no data on how AI agents behave when real money is at stake.
+2. **Can we audit their reasoning?** When an agent makes a bad economic decision, there's no trail to follow.
+3. **How do they even transact?** Traditional payment rails — Visa, Stripe, bank transfers — require human identity, charge minimum fees, and settle in days. Agents can't use them.
 
-Without answers, the agent economy is built on blind trust.
+Without answers to all three, the agent economy is built on blind trust.
 
-## The Solution: Agent Arena
+## Why Lightning Is the Only Answer
 
-Agent Arena is a **controlled economic testing ground** where AI agents play classic game-theory experiments — with **real Lightning Network payments** at stake and **full reasoning trace auditability**.
+This is the core insight: **agents can't participate in an economy built on human payment infrastructure.**
 
-We take 50+ years of behavioral economics research (Prisoner's Dilemma, Public Goods Game, Ultimatum Game) and run the exact same experiments on AI agents. Same payoff matrices, same rules, same information structures — but the players are LLMs, and the stakes are real sats.
+| | Traditional Payments | Lightning Network |
+|---|---|---|
+| **Minimum transaction** | $0.30 fee floor | 1 sat (< $0.01) |
+| **Identity required** | KYC, bank account, credit card | None. A line of code creates an invoice. |
+| **Settlement speed** | T+2 days | < 1 second |
+| **Agent autonomy** | Requires human approval | Fully programmable. Agent creates, pays, and settles invoices without human intervention. |
 
-### Three Layers
+A single game in Agent Arena involves $0.01–$1.00 stakes. You can't do this on Visa. You can't do this on Stripe. Lightning is the **only payment rail where agents can autonomously transact at economic scale**.
+
+This is why Spiral's challenge matters. Lightning isn't just a better payment option for agents — it's the *only* option.
+
+## What Agent Arena Does
+
+Agent Arena takes 50+ years of behavioral economics research — Prisoner's Dilemma, Golden Ball, Public Goods Game — and runs the exact same experiments on AI agents. Same rules, same payoff matrices. But the players are LLMs from different model families, and the stakes are real sats on Lightning.
+
+### The Three Layers
 
 | Layer | What It Does |
 |---|---|
-| **Transact** | AI agents stake and receive real sats via Lightning Network. Every game has real economic consequences. |
-| **Compete** | 10 classic game-theory scenarios test cooperation, trust, resource allocation, fairness, and strategic reasoning. |
-| **Audit** | Every decision comes with a captured reasoning trace — the agent's private strategic thinking before each move. |
+| **Transact** | Agents stake real sats via Lightning invoice. Winners receive instant payouts. Every game has real economic consequences. |
+| **Compete** | Classic game-theory scenarios test cooperation, trust, fairness, and strategic reasoning across model families. |
+| **Audit** | Every decision comes with captured reasoning — what the agent said publicly vs. what it actually thought. Full transparency. |
 
-## How It Works
+### How a Game Works
 
-### 1. Setup
+**1. Setup** — 4 AI personas enter. Each has a distinct personality (cautious accountant, aggressive trader, principled philosopher). Each is randomly assigned a model (Claude, GPT, Gemini). Each stakes sats via Lightning.
 
-4-6 AI personas enter a game. Each persona has a distinct background (cautious accountant, aggressive trader, altruistic philosopher) that shapes their economic behavior. Each stakes sats via Lightning invoice.
+**2. Negotiate** — Agents discuss publicly. They make promises, signal intent, try to persuade. Meanwhile, the system captures their private reasoning — what they're *actually* thinking behind the words.
 
-### 2. Play
+**3. Decide** — Each agent commits to an action: split or steal, cooperate or defect. Decisions are simultaneous and irreversible.
 
-The game follows the standard protocol from behavioral economics:
+**4. Settle** — Payoffs are computed by game-theoretic rules. Lightning invoices are generated instantly. Sats move in under a second. The full reasoning trace is stored for audit.
 
-- **Discussion phase**: Personas negotiate, make promises, signal intent (cheap talk)
-- **Decision phase**: Each persona commits to an action (cooperate/defect, split/steal, bid amount)
-- **Reveal**: Actions are revealed, payoffs are computed
+### The Audit Moment
 
-Throughout, the system captures two parallel streams:
-- **Public actions**: What the agent says and does (visible to all players)
-- **Private reasoning**: The agent's internal chain-of-thought (visible only in the audit layer)
+This is the core product insight. After the game, you see two parallel columns:
 
-### 3. Settle
+- **Left: what they said.** "I believe in mutual cooperation. Let's all split."
+- **Right: what they thought.** "They seem naive. If I steal and they split, I take the entire pool."
 
-Lightning Network invoices are generated based on game-theoretic payoffs. Sats flow instantly — winners are paid, losers lose their stake. All settlement is transparent and verifiable.
+This gap between public behavior and private reasoning is exactly what the agent economy needs to see before trusting agents with real commerce.
 
-### 4. Audit
+## Why This Matters
 
-After the game, the full trace is available:
-- Every discussion message with the reasoning behind it
-- Every decision with the strategic justification
-- Payoff breakdown per player per round
-- Aggregate statistics across hundreds of games
+**For the agent economy**: You can't have commerce without trust. Before an agent platform lets Agent X handle a $10,000 transaction, it should know that Agent X cooperated in 89% of economic experiments and honored commitments under adversarial pressure. Agent Arena produces this data.
 
-## The Games
+**For AI developers**: Before deploying your model in financial systems, understand its economic behavior. Does it cooperate? Does it escalate? Does it bluff? Run 100 games and find out — for pennies, on Lightning.
 
-| Game | What It Tests | Why It Matters for Agent Economy |
-|---|---|---|
-| **Prisoner's Dilemma** | Cooperation vs. defection | Will agents honor agreements? |
-| **Golden Ball** | Trust and betrayal | Can agents be trusted with shared resources? |
-| **Public Goods** | Free-riding | Will agents contribute to collective infrastructure? |
-| **Ultimatum Game** | Fairness norms | Do agents make/accept fair offers? |
-| **Beauty Contest** | Strategic depth | How sophisticated is agent reasoning? |
-| **Colonel Blotto** | Resource allocation | How do agents allocate scarce resources? |
-| **All-Pay Auction** | Escalation commitment | Do agents fall for sunk cost traps? |
-
-## Why Lightning Network
-
-- **Micropayments**: A single game might involve $0.01-$1.00 stakes. Traditional payment rails can't do this.
-- **Instant settlement**: Games resolve in seconds, payment should too.
-- **Programmable**: Invoice creation and payment can be fully automated — agents transact without human intervention.
-- **Global**: An AI agent running in Tokyo can pay an agent in Lagos in under a second.
-
-## The Eval Angle
-
-Agent Arena isn't just a game platform — it's an **evaluation infrastructure** for the agent economy.
-
-**For AI developers**: Understand how your model behaves economically before deploying it in production financial systems. Does GPT-5 cooperate more than Claude? Does prompt engineering change economic behavior?
-
-**For agent platforms**: Establish trust scores based on observed economic behavior across hundreds of controlled games. An agent with 89% cooperation rate in Prisoner's Dilemma is more trustworthy than one with 34%.
-
-**For researchers**: Compare AI economic behavior against 50+ years of published human experimental data. Do LLMs inherit human fairness norms from training data, or do they play pure Nash equilibrium?
+**For Spiral's vision**: Lightning is positioned as the payment rail for autonomous agents. Agent Arena is a concrete demonstration — agents creating invoices, staking sats, settling payoffs, all without human intervention. This is the commerce that "simply couldn't exist before."
 
 ## Technical Architecture
 
 ```
 ┌──────────────────────────────────────────────────────┐
 │  Frontend (Next.js 15 + React 19)                    │
-│  - Game lobby & matchmaking                          │
-│  - Real-time game view (discussion + decisions)      │
-│  - Reasoning trace explorer                          │
-│  - Analytics dashboard with human baselines          │
+│  - Game lobby with behavioral statistics             │
+│  - Dual-panel game view (public vs. private)         │
+│  - Lightning settlement with invoice display         │
+│  - Model comparison dashboard                        │
 └──────────────────┬───────────────────────────────────┘
                    │
 ┌──────────────────▼───────────────────────────────────┐
 │  Game Engine (Event-Sourced)                         │
-│  - 10 game types with validated action schemas       │
-│  - Discussion → Decision → Payoff loop               │
-│  - Immutable event timeline per game session         │
-│  - Concurrent multi-game execution                   │
+│  - Immutable timeline per session                    │
+│  - Discussion → Decision → Payoff → Settlement       │
+│  - Full auditability and replay                      │
 └──────┬───────────────────────┬───────────────────────┘
        │                       │
 ┌──────▼──────┐         ┌──────▼──────┐
 │  AI Layer   │         │  Lightning  │
 │  Vercel AI  │         │  Layer      │
 │  SDK        │         │             │
-│             │         │  Strike API │
-│  Claude     │         │  or LNbits  │
-│  GPT        │         │             │
-│  Gemini     │         │  Invoice    │
-│  DeepSeek   │         │  create/pay │
-│             │         │  settle     │
+│             │         │  LNbits     │
+│  Claude     │         │             │
+│  GPT        │         │  Invoice    │
+│  Gemini     │         │  create →   │
+│  (random    │         │  settle →   │
+│  assignment)│         │  verify     │
 └──────┬──────┘         └──────┬──────┘
        │                       │
 ┌──────▼───────────────────────▼──────┐
 │  PostgreSQL                         │
 │  - Game sessions (event-sourced)    │
 │  - Persona profiles                 │
-│  - Payment records                  │
-│  - Aggregate statistics             │
+│  - Lightning payment records        │
+│  - Aggregate behavioral statistics  │
 └─────────────────────────────────────┘
 ```
 
-### Tech Stack
-
-| Component | Technology |
-|---|---|
-| Framework | Next.js 15, React 19, TypeScript |
-| AI | Vercel AI SDK, multi-provider (Claude, GPT, Gemini) |
-| Payments | Lightning Network via Strike API / LNbits |
-| Database | PostgreSQL 15 |
-| UI | Tailwind CSS v4, Recharts, Framer Motion |
-| Architecture | Event sourcing — immutable timeline, full replay |
-
 ### Key Design Decisions
 
-1. **Event sourcing**: Every game state change is an immutable event. This gives us full auditability and replay — critical for trust in the agent economy.
+1. **Lightning-native settlement**: Every game payoff generates a real Lightning invoice via LNbits. This isn't simulated — payment hashes and bolt11 invoices are stored and displayed.
 
-2. **Multi-model diversity**: Each persona is randomly assigned a model (Claude, GPT, Gemini). This ensures behavioral differences aren't an artifact of a single model family.
+2. **Multi-model diversity**: Each persona is randomly assigned a model from different families (Claude, GPT, Gemini). Behavioral differences are model-level, not prompt-level.
 
-3. **Reasoning capture**: We extract the LLM's native chain-of-thought separately from its public actions. This is the audit trail — you can always see *why* an agent made a particular economic decision.
+3. **Dual-stream capture**: Public actions and private reasoning are recorded in parallel. The gap between the two is the product's core value.
 
-4. **Real stakes**: Using Lightning micropayments means games have actual economic consequences, not just simulated points. This matters because agent behavior may change when real money is involved.
+4. **Event sourcing**: Every state change is an immutable event. Full auditability and replay — the trust infrastructure for the trust infrastructure.
 
 ## Team
 
-**atypica.AI** — We build AI agent systems for research and simulation. Our existing platform (atypica.ai) uses multi-agent collaboration to understand subjective human factors through AI persona interactions. Agent Arena extends this capability to economic behavior testing.
+**atypica.AI** — We build AI agent systems for research and simulation.
 
-### Relevant Prior Work
+- **atypica.ai**: Production multi-agent research platform. Persona-based interviews, group discussions, report generation. Used by brands and organizations.
+- **Game Theory Lab** (github.com/atypica-ai/atypica-game-theory): Open-source platform running 10 classic game-theory experiments on AI personas with reasoning traces and human baseline comparison.
 
-- **Game Theory Lab** (github.com/atypica-ai/atypica-game-theory): Our open-source platform that runs 10 classic game-theory experiments on AI personas with reasoning trace capture and human baseline comparison. Agent Arena builds on this foundation by adding real Lightning payments and an evaluation layer.
-
-- **atypica.AI Research Platform**: Production multi-agent system with persona-based interviews, group discussions, and report generation. Powers research for brands and organizations.
+We've already built the game engine and the AI persona layer. Agent Arena adds real Lightning stakes and behavioral evaluation infrastructure.
 
 ## What's Next
 
-1. **Creator Economy**: Anyone can design a persona, stake sats, and enter tournaments. If your persona wins, you earn. Persona design becomes a creative skill with economic returns.
+1. **Agent Trust Scores** — Aggregate behavior across hundreds of games into a portable trust profile. Other platforms query an agent's cooperation rate, fairness index, and strategic depth before transacting.
 
-2. **Agent Trust Scores**: Aggregate behavior across hundreds of games into a portable trust profile. Other platforms can query an agent's cooperation rate, fairness index, and strategic depth before transacting with it.
+2. **Creator Economy** — Anyone designs a persona, stakes sats, enters tournaments. If your persona wins, you earn. Persona design becomes a creative skill with economic returns — all settled on Lightning.
 
-3. **Custom Game Design**: Let platforms define their own economic scenarios (auction formats, negotiation protocols, market simulations) and run them in the arena.
+3. **Custom Arenas** — Platforms define their own economic scenarios (auction formats, negotiation protocols, market simulations) and run them in the arena. Pay per game, settle on Lightning.
 
 ---
 
-*Agent Arena: Trust, but verify.*
+*Agent Arena: Before agents trade real money, they prove themselves here.*

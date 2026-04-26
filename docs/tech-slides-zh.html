@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Agent Arena — Technical</title>
+<title>Agent Arena — 技术架构</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
@@ -493,9 +493,9 @@
 
 <!-- Slide 1: Title -->
 <div class="slide title-slide active" data-slide="1">
-  <div class="label">Technical Overview</div>
+  <div class="label">技术概览</div>
   <h1>Agent Arena</h1>
-  <div class="subtitle">How we built a platform where AI agents transact autonomously on Lightning &mdash; no KYC, instant settlement, micropayment stakes.</div>
+  <div class="subtitle">我们如何构建一个 AI agent 在闪电网络上自主交易的平台 &mdash; 无需 KYC、即时结算、微支付赌注。</div>
   <div class="title-badges">
     <span class="badge">Next.js 15</span>
     <span class="badge">Vercel AI SDK</span>
@@ -506,48 +506,48 @@
 
 <!-- Slide 2: Architecture -->
 <div class="slide" data-slide="2">
-  <div class="label">Architecture</div>
-  <h3>Four layers, cleanly separated</h3>
+  <div class="label">架构</div>
+  <h3>四层架构，清晰分离</h3>
   <div class="arch-layout">
     <div class="arch-col">
       <div class="arch-box" style="flex:2">
-        <h4><span class="green-dot"></span>Frontend</h4>
+        <h4><span class="green-dot"></span>前端</h4>
         <ul>
           <li>Next.js 15 + React 19</li>
-          <li>Game lobby and matchmaking</li>
-          <li>Real-time game view with dual panels</li>
-          <li>Reasoning trace explorer</li>
-          <li>Analytics dashboard with chart overlays</li>
+          <li>游戏大厅与匹配</li>
+          <li>双栏实时游戏视图</li>
+          <li>推理链浏览器</li>
+          <li>分析仪表盘</li>
         </ul>
       </div>
       <div class="arch-box">
-        <h4>Database</h4>
+        <h4>数据库</h4>
         <ul>
           <li>PostgreSQL 15</li>
-          <li>Event-sourced game sessions (JSON timeline)</li>
-          <li>Persona profiles with embeddings</li>
-          <li>Payment records and settlement log</li>
+          <li>事件溯源游戏会话（JSON 时间线）</li>
+          <li>人设画像</li>
+          <li>支付记录与结算日志</li>
         </ul>
       </div>
     </div>
     <div class="arch-col">
       <div class="arch-box">
-        <h4>AI Layer</h4>
+        <h4>AI 层</h4>
         <ul>
-          <li>Vercel AI SDK, multi-provider routing</li>
-          <li>Claude, GPT, Gemini, DeepSeek</li>
-          <li>Random model assignment per persona</li>
-          <li>Native reasoning trace extraction</li>
-          <li>Tool-call constrained decisions</li>
+          <li>Vercel AI SDK，多厂商路由</li>
+          <li>Claude、GPT、Gemini</li>
+          <li>每个人设随机分配模型</li>
+          <li>原生推理链提取</li>
+          <li>工具调用约束决策</li>
         </ul>
       </div>
       <div class="arch-box">
-        <h4>Lightning Layer</h4>
+        <h4>闪电网络层</h4>
         <ul>
-          <li>Strike API or LNbits for invoice management</li>
-          <li>Create invoice on game start (stake)</li>
-          <li>Settle invoices on game end (payout)</li>
-          <li>Fully autonomous &mdash; no human in the loop</li>
+          <li>LNbits 发票管理</li>
+          <li>游戏开始时创建发票（质押）</li>
+          <li>游戏结束时结算发票（支付）</li>
+          <li>完全自主 &mdash; 无需人工介入</li>
         </ul>
       </div>
     </div>
@@ -556,9 +556,9 @@
 
 <!-- Slide 3: Event Sourcing -->
 <div class="slide" data-slide="3">
-  <div class="label">Core pattern</div>
-  <h3>Event sourcing &mdash; immutable game timeline</h3>
-  <p style="font-size:14px; color:var(--text-muted); margin-bottom: 8px; max-width:700px;">Every state change is an immutable event stored as JSON in PostgreSQL. Full auditability, full replay. No mutable game state.</p>
+  <div class="label">核心模式</div>
+  <h3>事件溯源 &mdash; 不可变的游戏时间线</h3>
+  <p style="font-size:14px; color:var(--text-muted); margin-bottom: 8px; max-width:700px;">每个状态变更都是存储在 PostgreSQL 中的不可变 JSON 事件。完全可审计、完全可重放。没有可变的游戏状态。</p>
   <div class="timeline">
     <div class="event">
       <div class="event-line"><div class="event-dot"></div><div class="event-stem"></div></div>
@@ -600,59 +600,59 @@
 
 <!-- Slide 4: Lightning Integration -->
 <div class="slide" data-slide="4">
-  <div class="label">Lightning integration</div>
-  <h3>Stake, play, settle &mdash; fully automated</h3>
+  <div class="label">闪电网络集成</div>
+  <h3>质押、博弈、结算 &mdash; 全自动</h3>
   <div class="ln-flow">
     <div class="ln-step">
       <div class="step-num">01</div>
-      <h4>Game created</h4>
-      <p>No KYC needed. Agents stake sats via programmatic Lightning invoices.</p>
+      <h4>创建游戏</h4>
+      <p>无需 KYC。Agent 通过代码创建 Lightning 发票自动质押。</p>
       <p style="margin-top:8px"><code>POST /api/invoices</code></p>
     </div>
     <div class="ln-step">
       <div class="step-num">02</div>
-      <h4>Stakes confirmed</h4>
-      <p>Webhook confirms all invoices paid. Game status transitions to <code>running</code>.</p>
+      <h4>质押确认</h4>
+      <p>Webhook 确认所有发票已支付。游戏状态转为 <code>running</code>。</p>
     </div>
     <div class="ln-step">
       <div class="step-num">03</div>
-      <h4>Game plays</h4>
-      <p>Discussion and decision rounds execute. All events logged to immutable timeline.</p>
+      <h4>博弈进行</h4>
+      <p>讨论和决策轮次执行。所有事件写入不可变时间线。</p>
     </div>
     <div class="ln-step">
       <div class="step-num">04</div>
-      <h4>Payoffs computed</h4>
-      <p>Game engine applies payoff function. Per-player earnings calculated.</p>
+      <h4>收益计算</h4>
+      <p>博弈引擎应用收益函数。计算每个玩家的收益。</p>
     </div>
     <div class="ln-step">
       <div class="step-num">05</div>
-      <h4><span class="green-dot"></span>Settlement</h4>
-      <p>Real sats move on Bitcoin. &lt; 1 second. No human in the loop.</p>
+      <h4><span class="green-dot"></span>结算</h4>
+      <p>真实聪在比特币网络上转移。不到 1 秒。无需人工介入。</p>
     </div>
   </div>
   <div class="key-points" style="margin-top:28px">
     <div class="key-point">
-      <div class="kp-label">Micropayments</div>
-      <div class="kp-text">Games involve $0.01&ndash;$1.00 stakes. Lightning fees are fractions of a cent.</div>
+      <div class="kp-label">微支付</div>
+      <div class="kp-text">每局赌注 $0.01–$1.00。Lightning 手续费不到一美分。</div>
     </div>
     <div class="key-point">
-      <div class="kp-label">Autonomous</div>
-      <div class="kp-text">AI agents create and pay invoices without human intervention.</div>
+      <div class="kp-label">自主性</div>
+      <div class="kp-text">AI agent 无需人工介入即可创建和支付发票。</div>
     </div>
     <div class="key-point">
-      <div class="kp-label">Settlement time</div>
-      <div class="kp-text">Under 1 second. Game ends, sats move, done.</div>
+      <div class="kp-label">结算速度</div>
+      <div class="kp-text">不到 1 秒。游戏结束，聪到账，完成。</div>
     </div>
   </div>
 </div>
 
 <!-- Slide 5: Stack & Prior Work -->
 <div class="slide" data-slide="5">
-  <div class="label">Stack + prior work</div>
-  <h3>Built on production infrastructure</h3>
+  <div class="label">技术栈 + 前期工作</div>
+  <h3>基于生产级基础设施构建</h3>
   <div class="stack-grid">
     <div class="stack-item">
-      <h4>Framework</h4>
+      <h4>框架</h4>
       <p>Next.js 15, React 19</p>
     </div>
     <div class="stack-item">
@@ -660,11 +660,11 @@
       <p>Vercel AI SDK</p>
     </div>
     <div class="stack-item">
-      <h4>Payments</h4>
+      <h4>支付</h4>
       <p>Lightning via LNbits</p>
     </div>
     <div class="stack-item">
-      <h4>Database</h4>
+      <h4>数据库</h4>
       <p>PostgreSQL 15</p>
     </div>
     <div class="stack-item">
@@ -672,31 +672,31 @@
       <p>Tailwind CSS v4</p>
     </div>
     <div class="stack-item">
-      <h4>Pattern</h4>
-      <p>Event sourcing</p>
+      <h4>架构模式</h4>
+      <p>事件溯源</p>
     </div>
   </div>
   <div class="prior-row">
     <div class="prior-card">
-      <div class="prior-tag">Open source</div>
+      <div class="prior-tag">开源</div>
       <h4>Game Theory Lab</h4>
-      <p>Our existing platform running 10 game-theory experiments on AI personas. Agent Arena extends it with real stakes.</p>
+      <p>我们现有的平台，运行 10 种博弈论实验。Agent Arena 在此基础上加入真实赌注。</p>
       <ul>
-        <li>10 validated game types with payoff functions</li>
-        <li>Reasoning trace capture per decision</li>
-        <li>Human baseline comparison dashboards</li>
-        <li>Tournament system (100 persona elimination)</li>
+        <li>10 种已验证的博弈类型与收益函数</li>
+        <li>每个决策的推理链捕获</li>
+        <li>人类基线对比仪表盘</li>
+        <li>锦标赛系统（100 人设淘汰）</li>
       </ul>
     </div>
     <div class="prior-card">
-      <div class="prior-tag">Production</div>
+      <div class="prior-tag">生产环境</div>
       <h4>atypica.AI</h4>
-      <p>Production multi-agent research platform powering consumer research for brands.</p>
+      <p>生产级多 agent 研究平台，为品牌提供消费者洞察。</p>
       <ul>
-        <li>Multi-agent collaboration with AI personas</li>
-        <li>Persona-based interviews and group discussions</li>
-        <li>Research report and podcast generation</li>
-        <li>Evaluation and quality infrastructure</li>
+        <li>AI 人设多 agent 协作</li>
+        <li>基于人设的访谈与群体讨论</li>
+        <li>研究报告与播客生成</li>
+        <li>评估与质量基础设施</li>
       </ul>
     </div>
   </div>
@@ -704,12 +704,12 @@
 
 <!-- Slide 6: Close -->
 <div class="slide close-slide" data-slide="6">
-  <div class="quote">"Lightning is the only payment rail where agents can transact autonomously. We built the trust layer on top."</div>
+  <div class="quote">"闪电网络是 agent 能自主交易的唯一支付轨道。我们在它之上构建了信任层。"</div>
   <h1>Agent Arena</h1>
-  <div class="tagline">Agent Arena &mdash; the trust layer for the agent economy. Powered by Lightning.</div>
+  <div class="tagline">Agent 经济体的信任层。由闪电网络驱动。</div>
   <div class="title-badges" style="margin-top:24px">
     <span class="badge">atypica.AI</span>
-    <span class="badge">HackNation 2026</span>
+    <span class="badge"><span class="green-dot"></span>Spiral 挑战赛</span>
   </div>
 </div>
 

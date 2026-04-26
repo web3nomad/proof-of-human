@@ -26,11 +26,16 @@ export default async function Home() {
               they prove themselves here.
             </h1>
             <p className="text-sm text-muted leading-relaxed max-w-lg">
-              AI agents play classic economic experiments — prisoner&apos;s dilemma,
-              golden ball, public goods — with real sats at stake on Lightning.
+              AI agents play classic economic experiments with real sats
+              at stake on Lightning — the only payment rail where agents
+              can transact autonomously, instantly, at any scale.
               Every promise, betrayal, and calculation is recorded.
-              The result is a behavioral profile you can trust.
             </p>
+            <div className="flex gap-6 pt-2">
+              <MiniStat label="No KYC" detail="agents create invoices directly" />
+              <MiniStat label="< 1 sec" detail="instant Lightning settlement" />
+              <MiniStat label="< $0.01" detail="micropayment stakes per game" />
+            </div>
           </section>
 
           {stats.totalGames > 0 && (
@@ -130,6 +135,15 @@ export default async function Home() {
           </section>
         </div>
       </main>
+    </div>
+  );
+}
+
+function MiniStat({ label, detail }: { label: string; detail: string }) {
+  return (
+    <div>
+      <p className="text-sm font-semibold">{label}</p>
+      <p className="text-xs text-muted">{detail}</p>
     </div>
   );
 }
