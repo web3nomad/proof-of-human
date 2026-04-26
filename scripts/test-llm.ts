@@ -3,9 +3,9 @@ import { generateText } from "ai";
 import { llm, ModelName } from "../src/ai/provider";
 
 const models: ModelName[] = [
-  "gpt-4.1-mini",
-  "claude-haiku-4-5",
-  "gemini-3-flash",
+  "gpt-5.4",
+  "claude-sonnet-4-5",
+  "gemini-3.1-pro",
 ];
 
 async function testModel(modelName: ModelName) {

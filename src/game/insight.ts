@@ -27,7 +27,7 @@ export async function generateBehavioralInsight(ctx: InsightContext) {
   const aiCoopRate = Math.round((aiCoopCount / ctx.aiDecisions.length) * 100);
 
   const { object } = await generateObject({
-    model: llm("gpt-4.1-mini"),
+    model: llm("gpt-5.4"),
     schema: z.object({
       insight: z
         .string()

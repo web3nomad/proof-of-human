@@ -1,6 +1,5 @@
 import { createAmazonBedrock } from "@ai-sdk/amazon-bedrock";
 import { createAzure } from "@ai-sdk/azure";
-import { createVertexAnthropic } from "@ai-sdk/google-vertex/anthropic";
 import { createVertex } from "@ai-sdk/google-vertex";
 
 const bedrock = createAmazonBedrock({
@@ -10,24 +9,8 @@ const bedrock = createAmazonBedrock({
 });
 
 const azure = createAzure({
-  resourceName: process.env.AZURE_RESOURCE_NAME,
-  apiKey: process.env.AZURE_API_KEY,
-});
-
-const azureEastUS2 = createAzure({
   resourceName: process.env.AZURE_EASTUS2_RESOURCE_NAME,
   apiKey: process.env.AZURE_EASTUS2_API_KEY,
-});
-
-const vertexClaude = createVertexAnthropic({
-  location: process.env.GOOGLE_VERTEX_CLAUDE_LOCATION,
-  project: process.env.GOOGLE_VERTEX_CLAUDE_PROJECT,
-  googleAuthOptions: {
-    credentials: {
-      client_email: process.env.GOOGLE_VERTEX_CLAUDE_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_VERTEX_CLAUDE_PRIVATE_KEY,
-    },
-  },
 });
 
 const vertex = createVertex({
@@ -42,31 +25,25 @@ const vertex = createVertex({
 });
 
 export type ModelName =
-  | "gpt-4.1-mini"
-  | "gpt-4o"
-  | "claude-haiku-4-5"
-  | "claude-sonnet-4"
-  | "gemini-3-flash";
+  | "gpt-5.4"
+  | "claude-sonnet-4-5"
+  | "gemini-3.1-pro";
 
 export function llm(modelName: ModelName) {
   switch (modelName) {
-    case "gpt-4.1-mini":
-      return azure("gpt-4.1-mini");
-    case "gpt-4o":
-      return azureEastUS2("gpt-4o");
-    case "claude-haiku-4-5":
-      return vertexClaude("claude-haiku-4-5");
-    case "claude-sonnet-4":
-      return bedrock("us.anthropic.claude-sonnet-4-20250514-v1:0");
-    case "gemini-3-flash":
-      return vertex("gemini-3-flash-preview");
+    case "gpt-5.4":
+      return azure("gpt-5.4");
+    case "claude-sonnet-4-5":
+      return bedrock("global.anthropic.claude-sonnet-4-5-20250929-v1:0");
+    case "gemini-3.1-pro":
+      return vertex("gemini-3.1-pro-preview");
   }
 }
 
 const MODEL_POOL: ModelName[] = [
-  "gpt-4.1-mini",
-  "claude-haiku-4-5",
-  "gemini-3-flash",
+  "gpt-5.4",
+  "claude-sonnet-4-5",
+  "gemini-3.1-pro",
 ];
 
 export function randomModel(): ModelName {
