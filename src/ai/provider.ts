@@ -31,7 +31,7 @@ const vertexClaude = createVertexAnthropic({
 });
 
 const vertex = createVertex({
-  location: process.env.GOOGLE_VERTEX_LOCATION,
+  location: "global",
   project: process.env.GOOGLE_VERTEX_PROJECT,
   googleAuthOptions: {
     credentials: {
