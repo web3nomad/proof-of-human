@@ -1,65 +1,14 @@
 import { prisma } from "@/lib/prisma";
-import { randomModel, ModelName } from "@/ai/provider";
+import { ModelName } from "@/ai/provider";
 import { generateDecision, generateDiscussion } from "./agent";
 import { calculatePayoffs } from "./payoff";
-import { PRESET_PERSONAS } from "./personas";
 import {
   Action,
-  DEFAULT_CONFIG,
   GameConfig,
   GameType,
   PersonaProfile,
   TimelineEvent,
 } from "./types";
-
-export async function createGame(
-  gameType: GameType,
-  playerCount: number = 4,
-  config?: Partial<GameConfig>,
-) {
-  const gameConfig = { ...DEFAULT_CONFIG[gameType], ...config };
-
-  const shuffled = [...PRESET_PERSONAS]
-    .sort(() => Math.random() - 0.5)
-    .slice(0, playerCount);
-
-  const session = await prisma.gameSession.create({
-    data: {
-      gameType,
-      status: "waiting",
-      config: gameConfig as Record<string, unknown>,
-      timeline: [],
-    },
-  });
-
-  const participants = await Promise.all(
-    shuffled.map(async (p, i) => {
-      const persona = await prisma.persona.upsert({
-        where: { id: 0 },
-        update: {},
-        create: {
-          name: p.name,
-          background: p.background,
-          traits: p.traits,
-          modelFamily: "random",
-        },
-      });
-
-      return prisma.gameParticipant.create({
-        data: {
-          sessionId: session.id,
-          personaId: persona.id,
-          seatIndex: i,
-          modelName: randomModel(),
-          stakeSats: gameConfig.stakePerPlayer,
-        },
-        include: { persona: true },
-      });
-    }),
-  );
-
-  return { session, participants };
-}
 
 function appendEvent(
   existing: unknown[],

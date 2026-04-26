@@ -1,4 +1,4 @@
-export { createGame, runGame } from "./engine";
+export { runGame } from "./engine";
 export { calculatePayoffs } from "./payoff";
 export { PRESET_PERSONAS } from "./personas";
 export type {
