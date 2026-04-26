@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { createGameAction, runGameAction } from "./actions";
+import { createGameAction } from "./actions";
 import { GameType } from "@/game/types";
 
 export function NewGameButton() {

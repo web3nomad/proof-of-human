@@ -11,6 +11,8 @@ import { TimelineEvent } from "@/game/types";
 type GameItem = Awaited<ReturnType<typeof listGamesAction>>[number];
 type Stats = Awaited<ReturnType<typeof getStatsAction>>;
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   const [games, stats]: [GameItem[], Stats] = await Promise.all([
     listGamesAction(),

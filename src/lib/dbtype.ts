@@ -1,6 +1,7 @@
 import type { GameConfig, TimelineEvent, PayoffResult } from "@/game/types";
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace PrismaJson {
     type GameSessionConfig = GameConfig;
     type GameSessionTimeline = TimelineEvent;
