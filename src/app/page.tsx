@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { listGamesAction, getStatsAction } from "./actions";
-import { NewGameButton } from "./new-game-button";
 import { JoinGameButton } from "./join-game-button";
 import { AnimatedNumber } from "./animated-number";
 import { LightningBadge } from "./components/lightning-badge";
@@ -26,61 +25,59 @@ export default async function Home() {
           <span className="text-sm font-semibold font-mono">Proof of Human</span>
           <LightningBadge />
         </div>
-        <div className="flex items-center gap-4">
-          {stats.totalSatsSettled > 0 && (
-            <span className="text-xs font-mono text-muted">
-              <AnimatedNumber value={stats.totalSatsSettled} /> sats settled
-            </span>
-          )}
-          <NewGameButton />
-        </div>
+        {stats.totalSatsSettled > 0 && (
+          <span className="text-xs font-mono text-muted">
+            &#x26A1; <AnimatedNumber value={stats.totalSatsSettled} /> sats settled
+          </span>
+        )}
       </header>
 
       <main className="flex-1 px-6 py-8">
         <div className="max-w-3xl mx-auto space-y-10">
-          {/* Play & Earn */}
-          <section className="border border-accent/30 rounded-lg bg-accent/5 p-6">
-            <div className="flex items-start justify-between">
-              <div>
-                <h2 className="text-lg font-semibold">
-                  Play against AI agents. Earn sats.
-                </h2>
-                <p className="text-sm text-muted mt-1 max-w-md">
-                  AI agents pay you &#x26A1;100 sats to participate. Your decisions
-                  produce behavioral data that calibrates how agents behave in
-                  economic contexts.
-                </p>
-              </div>
+          {/* Hero — Play & Earn is THE primary action */}
+          <section className="py-6">
+            <h1 className="text-2xl font-semibold leading-tight">
+              AI agents pay you to prove<br />
+              what it means to be human.
+            </h1>
+            <p className="text-sm text-muted mt-3 max-w-lg leading-relaxed">
+              Play economic experiments against AI agents. Your split-or-steal
+              decisions become the ground truth that calibrates agent behavior.
+              Earn &#x26A1; sats on Lightning for every game.
+            </p>
+            <div className="mt-6">
               <JoinGameButton />
             </div>
             {stats.totalSatsPaidToHumans > 0 && (
-              <p className="text-xs text-muted mt-3 pt-3 border-t border-accent/20">
-                &#x26A1; {stats.totalSatsPaidToHumans.toLocaleString()} sats paid to humans
-                across {stats.totalHumanGames} experiments
+              <p className="text-xs text-muted mt-4">
+                &#x26A1; {stats.totalSatsPaidToHumans.toLocaleString()} sats
+                paid to humans across {stats.totalHumanGames} experiments
               </p>
             )}
           </section>
 
           {/* Economy Dashboard */}
-          <section className="grid grid-cols-4 gap-3">
-            <MetricCard
-              label="Sats Staked"
-              value={stats.totalSatsStaked}
-              icon
-            />
-            <MetricCard
-              label="Sats Settled"
-              value={stats.totalSatsSettled}
-              icon
-            />
-            <MetricCard label="Experiments" value={stats.totalGames} />
-            <MetricCard
-              label="Cooperation"
-              value={stats.cooperationRate}
-              suffix="%"
-              accent
-            />
-          </section>
+          {stats.totalGames > 0 && (
+            <section className="grid grid-cols-4 gap-3">
+              <MetricCard
+                label="Sats Staked"
+                value={stats.totalSatsStaked}
+                icon
+              />
+              <MetricCard
+                label="Sats Settled"
+                value={stats.totalSatsSettled}
+                icon
+              />
+              <MetricCard label="Experiments" value={stats.totalGames} />
+              <MetricCard
+                label="Cooperation"
+                value={stats.cooperationRate}
+                suffix="%"
+                accent
+              />
+            </section>
+          )}
 
           {/* Featured Experiment */}
           {stats.featuredGame && (
@@ -96,7 +93,9 @@ export default async function Home() {
               <div className="grid grid-cols-3 gap-4">
                 {stats.humanCooperationRate !== null && (
                   <div className="border border-accent/30 rounded-lg p-4 bg-accent/5">
-                    <p className="text-xs font-mono text-accent">Human Baseline</p>
+                    <p className="text-xs font-mono text-accent">
+                      Human Baseline
+                    </p>
                     <div className="flex items-baseline gap-2 mt-2">
                       <span className="text-xl font-semibold">
                         {stats.humanCooperationRate}%
@@ -146,17 +145,11 @@ export default async function Home() {
           )}
 
           {/* Recent Experiments */}
-          <section>
-            <h2 className="text-xs text-muted uppercase tracking-wider mb-3">
-              Recent Experiments
-            </h2>
-            {games.length === 0 ? (
-              <div className="border border-dashed border-border rounded-lg p-8 text-center">
-                <p className="text-sm text-muted">
-                  No experiments yet. Start one above.
-                </p>
-              </div>
-            ) : (
+          {games.length > 0 && (
+            <section>
+              <h2 className="text-xs text-muted uppercase tracking-wider mb-3">
+                Recent Experiments
+              </h2>
               <div className="space-y-2">
                 {games.map((game) => {
                   const pool = game.participants.reduce(
@@ -181,7 +174,12 @@ export default async function Home() {
                           )}
                           <span className="text-sm">
                             {game.participants
-                              .map((pt) => (pt.isHuman ? (pt.humanAlias || "You") : pt.persona?.name?.split(" ")[0]) ?? "?")
+                              .map(
+                                (pt) =>
+                                  (pt.isHuman
+                                    ? pt.humanAlias || "You"
+                                    : pt.persona?.name?.split(" ")[0]) ?? "?",
+                              )
                               .join(" vs ")}
                           </span>
                         </div>
@@ -193,16 +191,15 @@ export default async function Home() {
                             {pool.toLocaleString()}
                           </span>
                           <StatusBadge status={game.status} />
-                          <span className="text-xs font-mono text-muted">
-                            #{game.id}
-                          </span>
                         </div>
                       </div>
                       {game.status === "settled" && (
                         <div className="flex gap-4 mt-2">
                           {game.participants.map((pt) => (
                             <span key={pt.id} className="text-xs text-muted">
-                              {(pt.isHuman ? (pt.humanAlias || "You") : pt.persona?.name?.split(" ")[0]) ?? "?"}{" "}
+                              {(pt.isHuman
+                                ? pt.humanAlias || "You"
+                                : pt.persona?.name?.split(" ")[0]) ?? "?"}{" "}
                               <span
                                 className={
                                   pt.payoffSats > 0
@@ -221,8 +218,8 @@ export default async function Home() {
                   );
                 })}
               </div>
-            )}
-          </section>
+            </section>
+          )}
         </div>
       </main>
     </div>
@@ -268,8 +265,7 @@ function FeaturedExperiment({
   const pool = game.participants.reduce((s, p) => s + p.stakeSats, 0);
 
   const betrayer = game.participants.find(
-    (p) =>
-      p.finalAction === "steal" || p.finalAction === "defect",
+    (p) => p.finalAction === "steal" || p.finalAction === "defect",
   );
   const featuredSeat = betrayer?.seatIndex ?? game.participants[0]?.seatIndex;
 
@@ -295,13 +291,16 @@ function FeaturedExperiment({
         Featured Experiment
       </h2>
       <div className="border border-border rounded-lg overflow-hidden">
-        {/* Header */}
         <div className="px-4 py-2.5 bg-zinc-50 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="text-xs font-mono bg-zinc-200 px-2 py-0.5 rounded">
               {gameLabel}
             </span>
-            <span className="text-xs font-mono text-muted">#{game.id}</span>
+            {game.participants.some((p) => p.isHuman) && (
+              <span className="text-xs font-mono bg-accent/10 text-accent px-2 py-0.5 rounded">
+                human
+              </span>
+            )}
           </div>
           <span className="text-xs font-mono text-muted flex items-center gap-1">
             <span className="text-accent">&#x26A1;</span>
@@ -309,20 +308,19 @@ function FeaturedExperiment({
           </span>
         </div>
 
-        {/* Agent results strip */}
         <div className="px-4 py-3 border-b border-border">
           <div className="flex gap-4">
             {game.participants.map((p) => (
               <div key={p.id} className="flex items-center gap-2 text-xs">
                 <span className="font-medium">
-                  {p.isHuman ? (p.humanAlias || "You") : p.persona?.name?.split(" ")[0] ?? "?"}
+                  {p.isHuman
+                    ? p.humanAlias || "You"
+                    : (p.persona?.name?.split(" ")[0] ?? "?")}
                 </span>
                 {p.finalAction && <ActionBadge action={p.finalAction} />}
                 <span
                   className={`font-mono ${
-                    p.payoffSats > 0
-                      ? "text-green-600"
-                      : "text-red-500"
+                    p.payoffSats > 0 ? "text-green-600" : "text-red-500"
                   }`}
                 >
                   {p.payoffSats > 0 ? "+" : ""}
@@ -333,7 +331,6 @@ function FeaturedExperiment({
           </div>
         </div>
 
-        {/* Featured dialogue pair */}
         {featuredDiscussion && featuredReasoning && (
           <div className="p-4">
             <TimelineEntry

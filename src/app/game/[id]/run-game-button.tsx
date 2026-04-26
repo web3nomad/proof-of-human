@@ -5,10 +5,11 @@ import { useEffect, useState, useCallback } from "react";
 import { runGameAction } from "@/app/actions";
 
 const PHASES = [
-  "Staking sats on Lightning...",
+  "Setting up the experiment...",
   "Agents are negotiating...",
   "Reading bluffs and promises...",
   "Final decisions locked in...",
+  "Calculating payoffs...",
   "Settling on Lightning...",
 ];
 
@@ -75,7 +76,7 @@ function GameLoadingOverlay({ phase }: { phase: string }) {
         </div>
         <p className="text-lg font-semibold">{phase}</p>
         <p className="text-xs text-muted">
-          AI agents are playing a real economic experiment
+          Running behavioral experiment on Lightning
         </p>
       </div>
     </div>
