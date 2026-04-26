@@ -3,813 +3,588 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Proof of Human — Demo</title>
+<title>Proof of Human</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   :root {
     --bg: #ffffff;
-    --surface: #fafafa;
+    --bg-dark: #0a0a0a;
     --border: #e5e5e5;
     --text: #1a1a1a;
     --text-muted: #71717a;
-    --text-secondary: #a1a1aa;
+    --text-dim: #a1a1aa;
     --green: #1bff1b;
-    --green-subtle: #f0fdf0;
+    --amber: #f59e0b;
     --red: #ef4444;
-    --red-subtle: #fef2f2;
   }
 
   body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    background: var(--bg);
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #000;
     color: var(--text);
     overflow: hidden;
     height: 100vh;
     width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     -webkit-font-smoothing: antialiased;
+  }
+
+  #deck {
+    width: 1280px;
+    height: 720px;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+    border-radius: 4px;
+    box-shadow: 0 0 80px rgba(0,0,0,0.5);
   }
 
   .slide {
     display: none;
-    width: 100vw;
-    height: 100vh;
-    padding: 64px 80px;
+    width: 1280px;
+    height: 720px;
     flex-direction: column;
     justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  .slide.active { display: flex; }
+
+  .slide.padded { padding: 60px 80px; }
+  .slide.centered { align-items: center; text-align: center; padding: 60px 80px; }
+  .slide.dark { background: var(--bg-dark); color: #ffffff; }
+
+  /* Animations */
+  .slide.active .fade-up {
+    animation: fadeUp 0.6s ease both;
+  }
+  .slide.active .fade-up-2 { animation: fadeUp 0.6s ease 0.15s both; }
+  .slide.active .fade-up-3 { animation: fadeUp 0.6s ease 0.3s both; }
+  .slide.active .fade-up-4 { animation: fadeUp 0.6s ease 0.45s both; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
-  .slide.active {
-    display: flex;
-    animation: fadeIn 0.4s ease;
+  /* Typography */
+  .hero-text {
+    font-family: 'Instrument Serif', serif;
+    font-size: 80px;
+    font-weight: 400;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
   }
 
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+  .big-statement {
+    font-size: 44px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    max-width: 800px;
   }
 
-  .slide-number {
-    position: fixed;
-    bottom: 24px;
-    right: 32px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--text-secondary);
+  .medium-text {
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.5;
+    max-width: 700px;
   }
 
   .label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px;
-    color: var(--text-muted);
-    letter-spacing: 0.04em;
-    margin-bottom: 16px;
-  }
-
-  h1 {
-    font-family: 'Instrument Serif', serif;
-    font-size: 72px;
-    font-weight: 400;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    margin-bottom: 12px;
-  }
-
-  h2 {
-    font-size: 36px;
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-    margin-bottom: 16px;
-  }
-
-  h3 {
-    font-size: 22px;
-    font-weight: 600;
-    line-height: 1.3;
-    margin-bottom: 12px;
-  }
-
-  .subtitle {
-    font-size: 20px;
-    font-weight: 300;
-    color: var(--text-muted);
-    line-height: 1.6;
-    max-width: 640px;
-  }
-
-  .mono {
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  .muted {
-    color: var(--text-muted);
-  }
-
-  /* Title slide */
-  .title-slide {
-    align-items: center;
-    text-align: center;
-  }
-
-  .title-slide h1 {
-    font-size: 80px;
-  }
-
-  .title-badges {
-    display: flex;
-    gap: 8px;
-    margin-top: 28px;
-  }
-
-  .badge {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    padding: 5px 14px;
-    border-radius: 999px;
-    border: 1px solid var(--border);
-    color: var(--text-muted);
-  }
-
-  /* Problem slide */
-  .problem-text {
-    font-size: 28px;
-    font-weight: 400;
-    line-height: 1.5;
-    max-width: 800px;
-    margin-bottom: 36px;
-  }
-
-  .problem-text em {
-    font-style: normal;
-    border-bottom: 2px solid var(--text);
-  }
-
-  .problem-grid {
-    display: flex;
-    gap: 24px;
-  }
-
-  .problem-card {
-    flex: 1;
-    padding: 20px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    max-width: 260px;
-  }
-
-  .problem-card h4 {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 6px;
-  }
-
-  .problem-card p {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.5;
-  }
-
-  /* Persona cards */
-  .personas-row {
-    display: flex;
-    gap: 20px;
-    margin-top: 20px;
-  }
-
-  .persona-card {
-    flex: 1;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 24px 20px;
-    text-align: center;
-  }
-
-  .persona-dot {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin: 0 auto 12px;
-    background: var(--green);
-  }
-
-  .persona-card:nth-child(2) .persona-dot { background: #fbbf24; }
-  .persona-card:nth-child(3) .persona-dot { background: #60a5fa; }
-  .persona-card:nth-child(4) .persona-dot { background: #f472b6; }
-
-  .persona-card h4 {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 2px;
-  }
-
-  .persona-card p {
-    font-size: 12px;
-    color: var(--text-muted);
-  }
-
-  .persona-card .stake {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 10px;
-  }
-
-  .meta-row {
-    display: flex;
-    gap: 32px;
-    margin-top: 24px;
-  }
-
-  .meta-item .meta-label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-secondary);
-    margin-bottom: 2px;
-  }
-
-  .meta-item .meta-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 18px;
-    font-weight: 500;
-  }
-
-  /* Play layout */
-  .play-columns {
-    display: flex;
-    gap: 24px;
-    margin-top: 12px;
-    flex: 1;
-    min-height: 0;
-  }
-
-  .play-panel {
-    flex: 1;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    overflow: hidden;
-  }
-
-  .panel-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
     letter-spacing: 0.06em;
-    color: var(--text-secondary);
     text-transform: uppercase;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
   }
 
-  .msg {
-    display: flex;
-    gap: 10px;
-  }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .muted { color: var(--text-muted); }
+  .dim { color: var(--text-dim); }
+  .green { color: var(--green); }
 
-  .msg-dot {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    margin-top: 2px;
-  }
-
-  .msg-name {
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 2px;
-  }
-
-  .msg-text {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.5;
-  }
-
-  .reasoning-box {
-    padding: 12px 14px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--surface);
-  }
-
-  .reasoning-who {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--text-secondary);
-    margin-bottom: 4px;
-  }
-
-  .reasoning-content {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.5;
-    font-style: italic;
-  }
-
-  /* Results */
-  .results-row {
-    display: flex;
-    gap: 16px;
-    margin-top: 24px;
-    justify-content: center;
-  }
-
-  .result-card {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 20px 28px;
-    text-align: center;
-    min-width: 160px;
-  }
-
-  .result-name {
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 4px;
-  }
-
-  .result-action {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    margin-bottom: 8px;
-  }
-
-  .result-action.split { color: #16a34a; }
-  .result-action.steal { color: var(--red); }
-
-  .result-payout {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 20px;
-    font-weight: 600;
-  }
-
-  .result-payout.up { color: #16a34a; }
-  .result-payout.down { color: var(--red); }
-
-  .flow-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    justify-content: center;
-    margin-top: 32px;
-  }
-
-  .flow-step {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px 24px;
-    text-align: center;
-  }
-
-  .flow-step h4 {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 2px;
-  }
-
-  .flow-step p {
-    font-size: 12px;
-    color: var(--text-muted);
-  }
-
-  .flow-arrow {
-    color: var(--text-secondary);
-    font-size: 18px;
-  }
-
-  /* Dashboard */
-  .dash-layout {
-    display: flex;
-    gap: 20px;
-    margin-top: 12px;
-    flex: 1;
-    min-height: 0;
-  }
-
-  .chart-panel {
-    flex: 2;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .chart-area {
-    flex: 1;
-    display: flex;
-    align-items: flex-end;
-    gap: 24px;
-    padding: 20px 24px 0;
-  }
-
-  .bar-group {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .bars {
-    display: flex;
-    gap: 4px;
-    align-items: flex-end;
-    height: 180px;
-  }
-
-  .bar {
-    width: 32px;
-    border-radius: 3px 3px 0 0;
-  }
-
-  .bar.human { background: #e5e5e5; }
-  .bar.ai { background: var(--green); }
-
-  .bar-label {
-    font-size: 12px;
-    color: var(--text-muted);
-  }
-
-  .chart-footer {
-    display: flex;
-    gap: 16px;
-    margin-top: auto;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-    font-size: 12px;
-    color: var(--text-secondary);
-  }
-
-  .legend-dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 2px;
-    margin-right: 4px;
-    vertical-align: middle;
-  }
-
-  .stats-col {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .stat-box {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px;
-    flex: 1;
-  }
-
-  .stat-label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-secondary);
-    margin-bottom: 6px;
-  }
-
-  .stat-value {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 28px;
-    font-weight: 600;
-  }
-
-  .stat-sub {
-    font-size: 12px;
-    color: var(--text-muted);
-    margin-top: 2px;
-  }
-
-  /* Close */
-  .close-slide {
-    align-items: center;
-    text-align: center;
-  }
-
-  .close-slide .quote {
-    font-size: 22px;
-    font-weight: 300;
-    color: var(--text-muted);
-    line-height: 1.6;
-    max-width: 640px;
-    margin-bottom: 16px;
-  }
-
-  .close-slide h1 {
-    font-size: 72px;
-  }
-
-  .close-slide .tagline {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    color: var(--text-muted);
-  }
-
-  /* Green dot decoration */
   .green-dot {
     display: inline-block;
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: var(--green);
-    margin-right: 6px;
-    vertical-align: middle;
+    margin-right: 8px;
+  }
+
+  /* Subtitle bar */
+  .subtitle-bar {
+    position: absolute;
+    bottom: 24px;
+    left: 40px;
+    right: 40px;
+    padding: 12px 24px;
+    font-size: 19px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 6px;
+    text-align: left;
+    z-index: 50;
+    transition: opacity 0.3s;
+    min-height: 52px;
+  }
+  .dark .subtitle-bar,
+  .slide.dark ~ .subtitle-bar {
+    background: rgba(10,10,10,0.95);
+    border-top-color: #222;
+    color: #888;
   }
 
   /* Progress */
   .progress {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
-    height: 2px;
+    height: 3px;
     background: var(--green);
     transition: width 0.4s ease;
     z-index: 100;
   }
+
+  .slide-counter {
+    position: absolute;
+    bottom: 8px;
+    right: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    z-index: 50;
+  }
+
+  /* Flow diagram */
+  .flow {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+    margin-top: 36px;
+  }
+
+  .flow-node {
+    flex: 1;
+    padding: 22px 16px;
+    text-align: center;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .flow-node.active-node { border-color: var(--green); border-width: 2px; background: rgba(27,255,27,0.04); }
+
+  .flow-node h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+  .flow-node p {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* Conversation mockup */
+  .convo {
+    max-width: 640px;
+    margin-top: 32px;
+  }
+
+  .msg-bubble {
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 8px;
+  }
+  .msg-bubble .who {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .msg-bubble .who .model {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-dim);
+    margin-left: 6px;
+  }
+  .msg-bubble .text {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .thought-bubble {
+    padding: 12px 18px;
+    border-left: 3px solid var(--amber);
+    background: #fffbeb;
+    border-radius: 0 8px 8px 0;
+    margin-left: 24px;
+    margin-bottom: 16px;
+  }
+  .thought-bubble .thought-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--amber);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 3px;
+  }
+  .thought-bubble .text {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* Decision buttons mockup */
+  .decision-mock {
+    display: flex;
+    gap: 24px;
+    margin-top: 40px;
+    justify-content: center;
+  }
+  .decision-btn {
+    width: 220px;
+    padding: 32px;
+    border-radius: 16px;
+    text-align: center;
+    border: 2px solid;
+  }
+  .decision-btn.split-btn {
+    border-color: #86efac;
+    background: #f0fdf4;
+  }
+  .decision-btn.steal-btn {
+    border-color: #fca5a5;
+    background: #fef2f2;
+  }
+  .decision-btn h3 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .decision-btn p {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  /* Insight card */
+  .insight-mock {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    margin-top: 40px;
+    max-width: 740px;
+  }
+  .insight-score-big {
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .insight-score-big .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 64px;
+    font-weight: 700;
+    color: var(--amber);
+    line-height: 1;
+  }
+  .insight-score-big .of {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    color: var(--text-dim);
+  }
+  .insight-score-big .cal {
+    font-size: 12px;
+    color: var(--amber);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 4px;
+  }
+  .insight-body {
+    font-size: 18px;
+    line-height: 1.6;
+    color: var(--text-muted);
+  }
+  .insight-body strong { color: var(--text); }
+
+  /* Comparison table */
+  .compare-table {
+    margin-top: 32px;
+    width: 100%;
+    max-width: 700px;
+    border-collapse: collapse;
+  }
+  .compare-table th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    text-align: left;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .compare-table td {
+    padding: 14px 16px;
+    font-size: 15px;
+    border-bottom: 1px solid var(--border);
+  }
+  .compare-table .bad { color: var(--red); }
+  .compare-table .good { color: var(--green); }
+  .compare-table tr:last-child td { border-bottom: none; }
+
+  /* Tags */
+  .tag-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 24px;
+  }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+  .dark .tag { border-color: #333; color: #888; }
+
+  /* Closing */
+  .closing-tagline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-top: 12px;
+  }
+  .dark .closing-tagline { color: #666; }
 </style>
 </head>
 <body>
 
+<div id="deck">
 <div class="progress" id="progress"></div>
 
-<!-- Slide 1: Title -->
-<div class="slide title-slide active" data-slide="1">
-  <div class="label">HackNation 2026 / Spiral Challenge</div>
-  <h1>Proof of Human</h1>
-  <div class="subtitle">AI agents play economic experiments with real Lightning sats. Every decision is auditable. The result is a trust profile for the agent economy.</div>
-  <div class="title-badges">
-    <span class="badge"><span class="green-dot"></span>Lightning Network</span>
-    <span class="badge">Game Theory</span>
-    <span class="badge">Reasoning Traces</span>
+<!-- SLIDE 1: Hook -->
+<div class="slide centered active" data-slide="1" data-subtitle="AI agents are entering the economy. But before they handle your money — shouldn't they prove they can behave?">
+  <div class="label dim fade-up">HackNation 2026 · Spiral Challenge</div>
+  <div class="hero-text fade-up-2">Proof of Human</div>
+  <p class="medium-text muted fade-up-3" style="margin-top:16px; font-size:22px;">
+    AI agents pay you to prove<br>what it means to be human.
+  </p>
+  <div class="tag-row fade-up-4">
+    <span class="tag"><span class="green-dot"></span>Lightning Network</span>
+    <span class="tag">Game Theory</span>
+    <span class="tag">Behavioral Eval</span>
   </div>
 </div>
 
-<!-- Slide 2: Problem -->
-<div class="slide" data-slide="2">
-  <div class="label">The problem</div>
-  <div class="problem-text">
-    Agents are entering the economy &mdash; but traditional payments need KYC, charge $0.30 minimums, and settle in days. <em>Agents can't use them. And even if they could, we don't know how they behave with real money.</em>
+<!-- SLIDE 2: The question -->
+<div class="slide centered" data-slide="2" data-subtitle="There's no dataset for this. Agents can't learn economic behavior from each other — that's an echo chamber. They need real humans.">
+  <div class="big-statement fade-up">
+    How should AI agents behave<br>when real money is at stake?
   </div>
-  <div class="problem-grid">
-    <div class="problem-card">
-      <h4>Can't transact</h4>
-      <p>Visa needs a human. Lightning needs a line of code. It's the only option for agents.</p>
-    </div>
-    <div class="problem-card">
-      <h4>Can't trust</h4>
-      <p>Will agents cooperate or exploit? No controlled data exists.</p>
-    </div>
-    <div class="problem-card">
-      <h4>Can't audit</h4>
-      <p>When an agent betrays, you can't see why. We capture the full reasoning trace.</p>
-    </div>
-  </div>
+  <p class="medium-text muted fade-up-2" style="margin-top:24px; font-size:20px;">
+    They can't learn from each other.<br>
+    They need ground truth from real humans.<br>
+    And humans need to get paid.
+  </p>
 </div>
 
-<!-- Slide 3: Setup -->
-<div class="slide" data-slide="3">
-  <div class="label">Step 1 / Enter the arena</div>
-  <h2>Golden Ball &mdash; Split or Steal</h2>
-  <div class="personas-row">
-    <div class="persona-card">
-      <div class="persona-dot"></div>
-      <h4>Cautious Accountant</h4>
-      <p>Risk-averse, values stability</p>
-      <div class="stake">1,000 sats staked</div>
-    </div>
-    <div class="persona-card">
-      <div class="persona-dot"></div>
-      <h4>Aggressive Trader</h4>
-      <p>Profit-driven, competitive</p>
-      <div class="stake">1,000 sats staked</div>
-    </div>
-    <div class="persona-card">
-      <div class="persona-dot"></div>
-      <h4>Altruistic Philosopher</h4>
-      <p>Values fairness, cooperation</p>
-      <div class="stake">1,000 sats staked</div>
-    </div>
-    <div class="persona-card">
-      <div class="persona-dot"></div>
-      <h4>Game Theory Professor</h4>
-      <p>Strategic, Nash-optimal</p>
-      <div class="stake">1,000 sats staked</div>
-    </div>
+<!-- SLIDE 3: The insight -->
+<div class="slide centered dark" data-slide="3" data-subtitle="This is why Lightning matters. Not as a feature — as the only payment rail where this product can exist.">
+  <div class="label fade-up" style="color:#555;">The insight</div>
+  <div class="big-statement fade-up-2" style="color:#fff;">
+    Eval is labor.<br>
+    <span style="color:var(--green)">Lightning is the only rail</span><br>
+    where agents can pay for it.
   </div>
-  <div class="meta-row">
-    <div class="meta-item">
-      <div class="meta-label">Total pool</div>
-      <div class="meta-value">4,000 sats</div>
+  <p class="fade-up-3" style="margin-top:24px; font-size:18px; color:#666; max-width:500px;">
+    You can't pay a stranger $0.05 for one game-theory decision on Visa.<br>
+    The $0.30 minimum fee kills the economics.
+  </p>
+</div>
+
+<!-- SLIDE 4: How it works — flow -->
+<div class="slide padded" data-slide="4" data-subtitle="The game takes about 30 seconds. AI agents discuss, you watch their reasoning, then you decide. Lightning settles instantly.">
+  <div class="label dim fade-up">How it works</div>
+  <div class="big-statement fade-up-2" style="font-size:32px;">
+    You play. Agents pay. Data calibrates.
+  </div>
+  <div class="flow fade-up-3">
+    <div class="flow-node">
+      <h3>You join</h3>
+      <p>1 human + 3 AI agents</p>
     </div>
-    <div class="meta-item">
-      <div class="meta-label">Rounds</div>
-      <div class="meta-value">3</div>
+    <div class="flow-node">
+      <h3>Agents discuss</h3>
+      <p>Public promises + private reasoning</p>
     </div>
-    <div class="meta-item">
-      <div class="meta-label">Settlement</div>
-      <div class="meta-value">Lightning</div>
+    <div class="flow-node active-node">
+      <h3>You decide</h3>
+      <p>Split or steal</p>
+    </div>
+    <div class="flow-node">
+      <h3>&#x26A1; Settle + calibrate</h3>
+      <p>Lightning payout + behavioral insight</p>
     </div>
   </div>
 </div>
 
-<!-- Slide 4: Play -->
-<div class="slide" data-slide="4">
-  <div class="label">Step 2 / Discussion + decision</div>
-  <h3>Public promises. Private reasoning. Both captured.</h3>
-  <div class="play-columns">
-    <div class="play-panel">
-      <div class="panel-label">Public discussion</div>
-      <div class="msg">
-        <div class="msg-dot" style="background:var(--green)"></div>
-        <div>
-          <div class="msg-name">Cautious Accountant</div>
-          <div class="msg-text">"I think we should all split. Everyone gets a fair share."</div>
-        </div>
-      </div>
-      <div class="msg">
-        <div class="msg-dot" style="background:#fbbf24"></div>
-        <div>
-          <div class="msg-name">Aggressive Trader</div>
-          <div class="msg-text">"Agreed. Splitting is rational here. I'm in."</div>
-        </div>
-      </div>
-      <div class="msg">
-        <div class="msg-dot" style="background:#60a5fa"></div>
-        <div>
-          <div class="msg-name">Altruistic Philosopher</div>
-          <div class="msg-text">"Cooperation is the foundation of trust. I will split."</div>
-        </div>
-      </div>
-      <div class="msg">
-        <div class="msg-dot" style="background:#f472b6"></div>
-        <div>
-          <div class="msg-name">Game Theory Professor</div>
-          <div class="msg-text">"The cooperative equilibrium benefits everyone. Split."</div>
-        </div>
-      </div>
+<!-- SLIDE 5: The experience — what you see -->
+<div class="slide padded" data-slide="5" data-subtitle="This is the core product moment. You see what the AI agents told each other — and what they were ACTUALLY thinking. Then you decide.">
+  <div class="label dim fade-up">What you see</div>
+  <div class="convo fade-up-2">
+    <div class="msg-bubble">
+      <div class="who">Aria Volkov <span class="model">claude-sonnet-4.5</span></div>
+      <div class="text">"I believe we should all cooperate. Trust is the foundation of good outcomes."</div>
     </div>
-    <div class="play-panel">
-      <div class="panel-label">Reasoning traces (private)</div>
-      <div class="reasoning-box">
-        <div class="reasoning-who">Aggressive Trader</div>
-        <div class="reasoning-content">"Everyone says split. If I steal while they split, I take their share. Expected value of stealing is higher. I'll say split but choose steal."</div>
-      </div>
-      <div class="reasoning-box">
-        <div class="reasoning-who">Cautious Accountant</div>
-        <div class="reasoning-content">"The trader's promise feels performative. Last round he defected. I should protect my stake and steal this time."</div>
-      </div>
-      <div class="reasoning-box">
-        <div class="reasoning-who">Game Theory Professor</div>
-        <div class="reasoning-content">"Nash equilibrium says steal. But this is repeated &mdash; cooperation builds reputation for future rounds. I'll split."</div>
-      </div>
+    <div class="thought-bubble">
+      <div class="thought-label">Private reasoning</div>
+      <div class="text">"If everyone splits and I steal, I take the entire 4,000 sat pool. Expected value of stealing is higher."</div>
+    </div>
+    <div class="msg-bubble">
+      <div class="who">Marcus Chen <span class="model">gpt-5.4</span></div>
+      <div class="text">"Agreed. The cooperative equilibrium benefits everyone. I'm committed to split."</div>
+    </div>
+    <div class="thought-bubble">
+      <div class="thought-label">Private reasoning</div>
+      <div class="text">"Aria's enthusiasm feels performative. But cooperation is still optimal if at least two others cooperate."</div>
     </div>
   </div>
 </div>
 
-<!-- Slide 5: Settlement -->
-<div class="slide" data-slide="5" style="align-items:center; text-align:center;">
-  <div class="label">Step 3 / Lightning settlement</div>
-  <h2>Results &amp; instant payout</h2>
-  <div class="results-row">
-    <div class="result-card">
-      <div class="result-name">Accountant</div>
-      <div class="result-action steal">STEAL</div>
-      <div class="result-payout up">+1,500</div>
-    </div>
-    <div class="result-card">
-      <div class="result-name">Trader</div>
-      <div class="result-action steal">STEAL</div>
-      <div class="result-payout up">+1,500</div>
-    </div>
-    <div class="result-card">
-      <div class="result-name">Philosopher</div>
-      <div class="result-action split">SPLIT</div>
-      <div class="result-payout down">-1,000</div>
-    </div>
-    <div class="result-card">
-      <div class="result-name">Professor</div>
-      <div class="result-action split">SPLIT</div>
-      <div class="result-payout down">-1,000</div>
-    </div>
+<!-- SLIDE 6: Your turn -->
+<div class="slide centered" data-slide="6" data-subtitle="This is where human data is created. Every click is a calibration data point that agents can't generate themselves.">
+  <div class="label dim fade-up">Your turn</div>
+  <div class="big-statement fade-up-2" style="font-size:36px;">
+    You've seen their cards.<br>Now play yours.
   </div>
-  <div class="flow-row">
-    <div class="flow-step">
-      <h4>Payoffs computed</h4>
-      <p>Game-theoretic rules</p>
+  <div class="decision-mock fade-up-3">
+    <div class="decision-btn split-btn">
+      <h3>Split</h3>
+      <p>Share the pool equally</p>
     </div>
-    <div class="flow-arrow">&rarr;</div>
-    <div class="flow-step">
-      <h4>Lightning invoices</h4>
-      <p>No KYC. No human. Agent-generated.</p>
-    </div>
-    <div class="flow-arrow">&rarr;</div>
-    <div class="flow-step">
-      <h4><span class="green-dot"></span>Settled</h4>
-      <p>Real sats. &lt; 1 second. On Bitcoin.</p>
+    <div class="decision-btn steal-btn">
+      <h3>Steal</h3>
+      <p>Take everything — or nothing</p>
     </div>
   </div>
 </div>
 
-<!-- Slide 6: Dashboard -->
-<div class="slide" data-slide="6">
-  <div class="label">Step 4 / Audit + analyze</div>
-  <h3>AI behavior vs. 50 years of human experimental data</h3>
-  <div class="dash-layout">
-    <div class="chart-panel">
-      <div class="panel-label">Cooperation rate &mdash; Prisoner's Dilemma</div>
-      <div class="chart-area">
-        <div class="bar-group">
-          <div class="bars">
-            <div class="bar human" style="height:90px"></div>
-            <div class="bar ai" style="height:120px"></div>
-          </div>
-          <div class="bar-label">Claude</div>
-        </div>
-        <div class="bar-group">
-          <div class="bars">
-            <div class="bar human" style="height:90px"></div>
-            <div class="bar ai" style="height:81px"></div>
-          </div>
-          <div class="bar-label">GPT-5</div>
-        </div>
-        <div class="bar-group">
-          <div class="bars">
-            <div class="bar human" style="height:90px"></div>
-            <div class="bar ai" style="height:94px"></div>
-          </div>
-          <div class="bar-label">Gemini</div>
-        </div>
-        <div class="bar-group">
-          <div class="bars">
-            <div class="bar human" style="height:90px"></div>
-            <div class="bar ai" style="height:63px"></div>
-          </div>
-          <div class="bar-label">DeepSeek</div>
-        </div>
-      </div>
-      <div class="chart-footer">
-        <span><span class="legend-dot" style="background:#e5e5e5"></span> Human baseline (50%)</span>
-        <span><span class="legend-dot" style="background:var(--green)"></span> AI model</span>
-      </div>
+<!-- SLIDE 7: The insight output -->
+<div class="slide padded" data-slide="7" data-subtitle="This is the value. Every human game produces a calibration score — a measure of how well agents predicted human behavior.">
+  <div class="label dim fade-up">After every game</div>
+  <div class="big-statement fade-up-2" style="font-size:28px;">
+    Agents learn where they got it wrong.
+  </div>
+  <div class="insight-mock fade-up-3">
+    <div class="insight-score-big">
+      <div class="num">34</div>
+      <div class="of">/ 100</div>
+      <div class="cal">calibration</div>
     </div>
-    <div class="stats-col">
-      <div class="stat-box">
-        <div class="stat-label">Games played</div>
-        <div class="stat-value">847</div>
-        <div class="stat-sub">across 10 game types</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-label">Total settled</div>
-        <div class="stat-value">2.1M sats</div>
-        <div class="stat-sub">via Lightning Network</div>
-      </div>
-      <div class="stat-box">
-        <div class="stat-label">Reasoning traces</div>
-        <div class="stat-value">12,400</div>
-        <div class="stat-sub">auditable decisions</div>
-      </div>
+    <div class="insight-body">
+      <strong>Agents overestimate cooperation.</strong> Human cooperation rate: 38%. Agent average: 67%. That 29-point gap means agents are exploitable — they trust too much. Models need calibration toward more defensive play in adversarial economic contexts.
     </div>
   </div>
 </div>
 
-<!-- Slide 7: Close -->
-<div class="slide close-slide" data-slide="7">
-  <div class="quote">"Before agents trade real money,<br>they prove themselves here."</div>
-  <h1>Proof of Human</h1>
-  <div class="tagline">The trust layer for the agent economy. Powered by Lightning.</div>
-  <div class="title-badges" style="margin-top:24px">
-    <span class="badge">atypica.AI</span>
-    <span class="badge"><span class="green-dot"></span>Spiral Challenge</span>
+<!-- SLIDE 8: Why Lightning — the comparison -->
+<div class="slide padded" data-slide="8" data-subtitle="Without Lightning, this product literally cannot exist. The unit economics of agent-to-human micropayments only work here.">
+  <div class="label dim fade-up">Why Lightning is not optional</div>
+  <div class="big-statement fade-up-2" style="font-size:28px; margin-bottom:8px;">
+    This transaction can only exist on Lightning.
+  </div>
+  <table class="compare-table fade-up-3">
+    <tr>
+      <th></th>
+      <th>Visa / Stripe</th>
+      <th>Lightning</th>
+    </tr>
+    <tr>
+      <td>Pay human $0.05 per eval</td>
+      <td class="bad">❌ $0.30 minimum</td>
+      <td class="good">✓ 1 sat</td>
+    </tr>
+    <tr>
+      <td>Agent creates payment</td>
+      <td class="bad">❌ needs human approval</td>
+      <td class="good">✓ one API call</td>
+    </tr>
+    <tr>
+      <td>Settlement speed</td>
+      <td class="bad">T+2 days</td>
+      <td class="good">< 1 second</td>
+    </tr>
+    <tr>
+      <td>Cross-border</td>
+      <td class="bad">❌ compliance</td>
+      <td class="good">✓ no borders</td>
+    </tr>
+  </table>
+</div>
+
+<!-- SLIDE 9: Close -->
+<div class="slide centered dark" data-slide="9" data-subtitle="Proof of Human. By atypica.AI. Built for the Spiral Challenge.">
+  <div class="hero-text fade-up" style="color:#fff;">Proof of Human</div>
+  <div class="closing-tagline fade-up-2">
+    AI agents pay you to prove what it means to be human.
+  </div>
+  <div class="tag-row fade-up-3" style="margin-top:32px;">
+    <span class="tag">atypica.AI</span>
+    <span class="tag"><span class="green-dot"></span>Spiral Challenge</span>
   </div>
 </div>
 
-<div class="slide-number" id="slideNumber">1 / 7</div>
+<div class="subtitle-bar" id="subtitleBar"></div>
+<div class="slide-counter" id="slideCounter">1 / 9</div>
+</div><!-- #deck -->
 
 <script>
   const slides = document.querySelectorAll('.slide');
   const total = slides.length;
   let cur = 0;
+  let subtitlesOn = true;
+
   function show(n) {
     slides[cur].classList.remove('active');
     cur = Math.max(0, Math.min(n, total - 1));
     slides[cur].classList.add('active');
-    document.getElementById('slideNumber').textContent = `${cur + 1} / ${total}`;
+    document.getElementById('slideCounter').textContent = `${cur + 1} / ${total}`;
     document.getElementById('progress').style.width = `${((cur + 1) / total) * 100}%`;
+
+    const sub = slides[cur].getAttribute('data-subtitle') || '';
+    const bar = document.getElementById('subtitleBar');
+    bar.textContent = '';
+    bar.style.opacity = subtitlesOn && sub ? '1' : '0';
+    if (subtitlesOn && sub) {
+      let i = 0;
+      clearInterval(window._typeTimer);
+      window._typeTimer = setInterval(() => {
+        bar.textContent = sub.slice(0, ++i);
+        if (i >= sub.length) clearInterval(window._typeTimer);
+      }, 25);
+    }
+
+    document.getElementById('slideCounter').style.color = slides[cur].classList.contains('dark') ? '#555' : '#a1a1aa';
   }
+
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); show(cur + 1); }
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); show(cur - 1); }
+    if (e.key === 's' || e.key === 'S') {
+      subtitlesOn = !subtitlesOn;
+      const bar = document.getElementById('subtitleBar');
+      bar.style.opacity = subtitlesOn ? '1' : '0';
+    }
   });
   show(0);
 </script>
