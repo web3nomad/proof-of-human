@@ -15,7 +15,7 @@ export function NewGameButton() {
     try {
       const playerCount = gameType === "prisoners_dilemma" ? 2 : 4;
       const sessionId = await createGameAction(gameType, playerCount);
-      router.push(`/game/${sessionId}`);
+      router.push(`/game/${sessionId}?autoRun=1`);
     } catch (e) {
       console.error(e);
       setLoading(false);

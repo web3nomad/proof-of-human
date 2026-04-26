@@ -5,10 +5,13 @@ import { RunGameButton } from "./run-game-button";
 
 export default async function GamePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ autoRun?: string }>;
 }) {
   const { id } = await params;
+  const { autoRun } = await searchParams;
   const game = await getGameAction(Number(id));
   const timeline = game.timeline as unknown as TimelineEvent[];
 
@@ -31,7 +34,9 @@ export default async function GamePage({
           </span>
           <span className="text-sm text-muted">#{game.id}</span>
         </div>
-        {game.status === "waiting" && <RunGameButton sessionId={game.id} />}
+        {game.status === "waiting" && (
+          <RunGameButton sessionId={game.id} autoRun={autoRun === "1"} />
+        )}
       </header>
 
       <div className="flex-1 flex flex-col px-6 py-6">
