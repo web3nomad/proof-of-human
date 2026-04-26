@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { listGamesAction, getStatsAction } from "./actions";
 import { NewGameButton } from "./new-game-button";
+import { JoinGameButton } from "./join-game-button";
 import { AnimatedNumber } from "./animated-number";
 import { LightningBadge } from "./components/lightning-badge";
 import { ActionBadge } from "./components/action-badge";
@@ -35,6 +36,29 @@ export default async function Home() {
 
       <main className="flex-1 px-6 py-8">
         <div className="max-w-3xl mx-auto space-y-10">
+          {/* Play & Earn */}
+          <section className="border border-accent/30 rounded-lg bg-accent/5 p-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <h2 className="text-lg font-semibold">
+                  Play against AI agents. Earn sats.
+                </h2>
+                <p className="text-sm text-muted mt-1 max-w-md">
+                  AI agents pay you &#x26A1;100 sats to participate. Your decisions
+                  produce behavioral data that calibrates how agents behave in
+                  economic contexts.
+                </p>
+              </div>
+              <JoinGameButton />
+            </div>
+            {stats.totalSatsPaidToHumans > 0 && (
+              <p className="text-xs text-muted mt-3 pt-3 border-t border-accent/20">
+                &#x26A1; {stats.totalSatsPaidToHumans.toLocaleString()} sats paid to humans
+                across {stats.totalHumanGames} experiments
+              </p>
+            )}
+          </section>
+
           {/* Economy Dashboard */}
           <section className="grid grid-cols-4 gap-3">
             <MetricCard
@@ -68,6 +92,28 @@ export default async function Home() {
                 Model Behavior Profile
               </h2>
               <div className="grid grid-cols-3 gap-4">
+                {stats.humanCooperationRate !== null && (
+                  <div className="border border-accent/30 rounded-lg p-4 bg-accent/5">
+                    <p className="text-xs font-mono text-accent">Human Baseline</p>
+                    <div className="flex items-baseline gap-2 mt-2">
+                      <span className="text-xl font-semibold">
+                        {stats.humanCooperationRate}%
+                      </span>
+                      <span className="text-xs text-muted">
+                        calibration target
+                      </span>
+                    </div>
+                    <div className="mt-2 h-1 bg-zinc-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-accent rounded-full"
+                        style={{ width: `${stats.humanCooperationRate}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-muted mt-1.5">
+                      {stats.totalHumanGames} experiments
+                    </p>
+                  </div>
+                )}
                 {stats.modelStats.map((m) => (
                   <div
                     key={m.model}
@@ -126,9 +172,14 @@ export default async function Home() {
                           <span className="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded">
                             {game.gameType.replace("_", " ")}
                           </span>
+                          {game.participants.some((p) => p.isHuman) && (
+                            <span className="text-xs font-mono bg-accent/10 text-accent px-2 py-0.5 rounded">
+                              human
+                            </span>
+                          )}
                           <span className="text-sm">
                             {game.participants
-                              .map((pt) => pt.persona.name.split(" ")[0])
+                              .map((pt) => (pt.isHuman ? (pt.humanAlias || "You") : pt.persona?.name?.split(" ")[0]) ?? "?")
                               .join(" vs ")}
                           </span>
                         </div>
@@ -149,7 +200,7 @@ export default async function Home() {
                         <div className="flex gap-4 mt-2">
                           {game.participants.map((pt) => (
                             <span key={pt.id} className="text-xs text-muted">
-                              {pt.persona.name.split(" ")[0]}{" "}
+                              {(pt.isHuman ? (pt.humanAlias || "You") : pt.persona?.name?.split(" ")[0]) ?? "?"}{" "}
                               <span
                                 className={
                                   pt.payoffSats > 0
@@ -262,7 +313,7 @@ function FeaturedExperiment({
             {game.participants.map((p) => (
               <div key={p.id} className="flex items-center gap-2 text-xs">
                 <span className="font-medium">
-                  {p.persona.name.split(" ")[0]}
+                  {p.isHuman ? (p.humanAlias || "You") : p.persona?.name?.split(" ")[0] ?? "?"}
                 </span>
                 {p.finalAction && <ActionBadge action={p.finalAction} />}
                 <span

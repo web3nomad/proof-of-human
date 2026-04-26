@@ -1,4 +1,4 @@
-export { runGame } from "./engine";
+export { runGame, runAIPhase, submitHumanDecision } from "./engine";
 export { calculatePayoffs } from "./payoff";
 export { PRESET_PERSONAS } from "./personas";
 export type {

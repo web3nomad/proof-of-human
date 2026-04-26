@@ -5,7 +5,7 @@ export type GameStatus = "waiting" | "discussion" | "deciding" | "settled";
 export type Action = "split" | "steal" | "cooperate" | "defect";
 
 export interface TimelineEvent {
-  type: "game_started" | "discussion" | "reasoning" | "decision" | "payoff" | "settlement";
+  type: "game_started" | "discussion" | "reasoning" | "decision" | "payoff" | "settlement" | "behavioral_insight";
   timestamp: string;
   seatIndex?: number;
   data: Record<string, unknown>;
@@ -22,6 +22,8 @@ export interface GameConfig {
   stakePerPlayer: number;
   rounds: number;
   discussionMessages: number;
+  participationFee?: number;
+  hasHumanPlayer?: boolean;
 }
 
 export interface PayoffResult {

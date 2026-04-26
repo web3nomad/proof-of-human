@@ -7,6 +7,7 @@ export function AgentCard({
   stakeSats,
   finalAction,
   payoffSats,
+  isHuman = false,
 }: {
   name: string;
   modelName: string;
@@ -14,6 +15,7 @@ export function AgentCard({
   stakeSats: number;
   finalAction: string | null;
   payoffSats: number;
+  isHuman?: boolean;
 }) {
   const hasResult = finalAction !== null;
   const won = payoffSats > 0;
@@ -34,10 +36,18 @@ export function AgentCard({
           {stakeSats}&#x26A1;
         </span>
       </div>
-      <p className="text-xs text-muted mt-1 line-clamp-1">
-        {traits.join(", ")}
-      </p>
-      <p className="text-xs font-mono text-muted mt-1">{modelName}</p>
+      {isHuman ? (
+        <p className="text-xs font-mono text-accent mt-1">HUMAN</p>
+      ) : (
+        <>
+          {traits.length > 0 && (
+            <p className="text-xs text-muted mt-1 line-clamp-1">
+              {traits.join(", ")}
+            </p>
+          )}
+          <p className="text-xs font-mono text-muted mt-1">{modelName}</p>
+        </>
+      )}
       {hasResult && (
         <div className="mt-2 pt-2 border-t border-border/50 flex items-center justify-between">
           <ActionBadge action={finalAction} />
