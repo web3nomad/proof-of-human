@@ -5,7 +5,7 @@ import { useEffect, useState, useCallback } from "react";
 import { runGameAction } from "@/app/actions";
 
 const PHASES = [
-  "Staking sats...",
+  "Staking sats on Lightning...",
   "Agents are negotiating...",
   "Reading bluffs and promises...",
   "Final decisions locked in...",
@@ -47,16 +47,7 @@ export function RunGameButton({
   }, [autoRun, handleRun]);
 
   if (loading) {
-    return (
-      <div className="flex items-center gap-3">
-        <div className="flex gap-1">
-          <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-          <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-          <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
-        </div>
-        <span className="text-sm text-muted">{PHASES[phaseIndex]}</span>
-      </div>
-    );
+    return <GameLoadingOverlay phase={PHASES[phaseIndex]} />;
   }
 
   return (
@@ -66,5 +57,27 @@ export function RunGameButton({
     >
       Run Game
     </button>
+  );
+}
+
+function GameLoadingOverlay({ phase }: { phase: string }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 backdrop-blur-sm">
+      <div className="text-center space-y-6">
+        <div className="flex justify-center gap-2">
+          {[0, 1, 2].map((i) => (
+            <span
+              key={i}
+              className="w-2 h-2 bg-accent rounded-full animate-bounce"
+              style={{ animationDelay: `${i * 150}ms` }}
+            />
+          ))}
+        </div>
+        <p className="text-lg font-semibold">{phase}</p>
+        <p className="text-xs text-muted">
+          AI agents are playing a real economic experiment
+        </p>
+      </div>
+    </div>
   );
 }
