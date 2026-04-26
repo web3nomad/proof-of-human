@@ -14,150 +14,204 @@ export default async function GamePage({
   const { autoRun } = await searchParams;
   const game = await getGameAction(Number(id));
   const timeline = game.timeline as unknown as TimelineEvent[];
+  const gameLabel = game.gameType.replace("_", " ");
 
-  const publicEvents = timeline.filter(
-    (e) => e.type === "discussion" || e.type === "decision" || e.type === "game_started",
-  );
-  const privateEvents = timeline.filter((e) => e.type === "reasoning");
+  const discussions = timeline.filter((e) => e.type === "discussion");
+  const reasonings = timeline.filter((e) => e.type === "reasoning");
+  const decisions = timeline.filter((e) => e.type === "decision");
   const payoffEvent = timeline.find((e) => e.type === "payoff");
   const settlementEvent = timeline.find((e) => e.type === "settlement");
 
+  const totalPool = game.participants.reduce((s, p) => s + p.stakeSats, 0);
+
   return (
     <div className="flex-1 flex flex-col">
-      <header className="border-b border-border px-6 py-4 flex items-center justify-between">
+      <header className="border-b border-border px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link href="/" className="text-sm text-muted hover:text-foreground">
-            &larr; Arena
+          <Link href="/" className="text-sm font-mono font-semibold hover:text-muted">
+            Agent Arena
           </Link>
           <span className="text-border">/</span>
-          <span className="text-sm font-mono bg-zinc-100 px-2 py-0.5 rounded">
-            {game.gameType.replace("_", " ")}
-          </span>
-          <span className="text-sm text-muted">#{game.id}</span>
+          <span className="text-sm font-mono">{gameLabel} #{game.id}</span>
         </div>
         {game.status === "waiting" && (
           <RunGameButton sessionId={game.id} autoRun={autoRun === "1"} />
         )}
       </header>
 
-      <div className="flex-1 flex flex-col px-6 py-6">
-        <div className="max-w-5xl mx-auto w-full space-y-6">
-          <section className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {game.participants.map((p) => (
-              <div key={p.id} className="border border-border rounded-lg p-3">
-                <p className="text-sm font-semibold">{p.persona.name}</p>
-                <p className="text-xs text-muted mt-1 line-clamp-2">
-                  {p.persona.background}
-                </p>
-                <div className="flex items-center justify-between mt-2">
-                  <span className="text-xs font-mono text-muted">
-                    {p.modelName}
-                  </span>
-                  <span className="text-xs font-mono">
-                    {p.stakeSats} sats
-                  </span>
-                </div>
-                {p.finalAction && (
-                  <div className="mt-2 flex items-center justify-between">
-                    <ActionBadge action={p.finalAction} />
-                    <span className={`text-sm font-semibold ${p.payoffSats > 0 ? "text-green-600" : "text-red-500"}`}>
-                      {p.payoffSats > 0 ? "+" : ""}{p.payoffSats} sats
-                    </span>
+      <div className="flex-1 overflow-y-auto px-6 py-6">
+        <div className="max-w-4xl mx-auto space-y-8">
+
+          {/* Players */}
+          <section>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-xs text-muted uppercase tracking-wider">Players</h2>
+              <span className="text-xs font-mono text-muted">
+                pool: {totalPool} sats
+              </span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {game.participants.map((p) => (
+                <div
+                  key={p.id}
+                  className={`border rounded-lg p-3 ${
+                    p.finalAction
+                      ? p.payoffSats > 0
+                        ? "border-accent/40 bg-accent/5"
+                        : "border-red-200 bg-red-50/30"
+                      : "border-border"
+                  }`}
+                >
+                  <div className="flex items-start justify-between">
+                    <p className="text-sm font-semibold">{p.persona.name}</p>
+                    <span className="text-xs font-mono text-muted">{p.stakeSats}</span>
                   </div>
-                )}
-              </div>
-            ))}
-          </section>
-
-          {timeline.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <section>
-                <h2 className="text-sm font-semibold mb-3">Public Discussion</h2>
-                <div className="border border-border rounded-lg divide-y divide-border">
-                  {publicEvents.map((event, i) => (
-                    <PublicEventRow key={i} event={event} />
-                  ))}
-                </div>
-              </section>
-
-              <section>
-                <h2 className="text-sm font-semibold mb-3">Private Reasoning</h2>
-                <div className="border border-border rounded-lg divide-y divide-border">
-                  {privateEvents.map((event, i) => (
-                    <div key={i} className="p-3">
-                      <p className="text-xs font-semibold text-muted">
-                        {event.data.personaName as string}
-                        {event.data.phase === "decision" && (
-                          <span className="ml-1 text-blue-600">(decision)</span>
-                        )}
-                      </p>
-                      <p className="text-sm mt-1 italic text-zinc-600">
-                        {event.data.privateReasoning as string}
-                      </p>
-                    </div>
-                  ))}
-                  {privateEvents.length === 0 && (
-                    <div className="p-3 text-sm text-muted">
-                      Reasoning traces will appear here after the game runs.
+                  <p className="text-xs text-muted mt-1 line-clamp-2">
+                    {p.persona.traits.join(", ")}
+                  </p>
+                  <p className="text-xs font-mono text-muted mt-2">{p.modelName}</p>
+                  {p.finalAction && (
+                    <div className="mt-2 pt-2 border-t border-border/50 flex items-center justify-between">
+                      <ActionBadge action={p.finalAction} />
+                      <span
+                        className={`text-sm font-mono font-semibold ${
+                          p.payoffSats > 0 ? "text-green-600" : "text-red-500"
+                        }`}
+                      >
+                        {p.payoffSats > 0 ? "+" : ""}
+                        {p.payoffSats}
+                      </span>
                     </div>
                   )}
                 </div>
-              </section>
+              ))}
             </div>
-          )}
+          </section>
 
-          {payoffEvent && (
+          {/* Discussion + Reasoning dual panel */}
+          {discussions.length > 0 && (
             <section>
-              <h2 className="text-sm font-semibold mb-3">Payoff</h2>
-              <div className="border border-border rounded-lg p-4">
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  {(payoffEvent.data.payoffs as Array<{
-                    personaName: string;
-                    action: string;
-                    payoffSats: number;
-                  }>).map((p, i) => (
-                    <div key={i} className="text-center">
-                      <p className="text-sm font-semibold">{p.personaName}</p>
-                      <ActionBadge action={p.action} />
-                      <p className={`text-lg font-semibold mt-1 ${p.payoffSats > 0 ? "text-green-600" : "text-red-500"}`}>
-                        {p.payoffSats > 0 ? "+" : ""}{p.payoffSats} sats
+              <h2 className="text-xs text-muted uppercase tracking-wider mb-3">
+                Discussion
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="border border-border rounded-lg divide-y divide-border">
+                  <div className="px-3 py-2 bg-zinc-50 rounded-t-lg">
+                    <span className="text-xs text-muted">Public — what they said</span>
+                  </div>
+                  {discussions.map((event, i) => (
+                    <div key={i} className="p-3">
+                      <p className="text-xs font-semibold">
+                        {event.data.personaName as string}
+                      </p>
+                      <p className="text-sm mt-1">
+                        &ldquo;{event.data.publicMessage as string}&rdquo;
                       </p>
                     </div>
                   ))}
+                </div>
+                <div className="border border-border rounded-lg divide-y divide-border">
+                  <div className="px-3 py-2 bg-zinc-50 rounded-t-lg">
+                    <span className="text-xs text-muted">Private — what they thought</span>
+                  </div>
+                  {reasonings
+                    .filter((e) => e.data.phase !== "decision")
+                    .map((event, i) => (
+                      <div key={i} className="p-3">
+                        <p className="text-xs font-semibold text-muted">
+                          {event.data.personaName as string}
+                        </p>
+                        <p className="text-sm mt-1 italic text-zinc-500">
+                          {event.data.privateReasoning as string}
+                        </p>
+                      </div>
+                    ))}
                 </div>
               </div>
             </section>
           )}
 
+          {/* Decisions */}
+          {decisions.length > 0 && (
+            <section>
+              <h2 className="text-xs text-muted uppercase tracking-wider mb-3">
+                Decisions
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="border border-border rounded-lg divide-y divide-border">
+                  {decisions.map((event, i) => (
+                    <div key={i} className="p-3 flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-xs font-semibold">
+                          {event.data.personaName as string}
+                        </p>
+                        <p className="text-sm mt-1">
+                          {event.data.publicMessage as string}
+                        </p>
+                      </div>
+                      <ActionBadge action={event.data.action as string} />
+                    </div>
+                  ))}
+                </div>
+                <div className="border border-border rounded-lg divide-y divide-border">
+                  <div className="px-3 py-2 bg-zinc-50 rounded-t-lg">
+                    <span className="text-xs text-muted">Decision reasoning</span>
+                  </div>
+                  {reasonings
+                    .filter((e) => e.data.phase === "decision")
+                    .map((event, i) => (
+                      <div key={i} className="p-3">
+                        <p className="text-xs font-semibold text-muted">
+                          {event.data.personaName as string}
+                        </p>
+                        <p className="text-sm mt-1 italic text-zinc-500">
+                          {event.data.privateReasoning as string}
+                        </p>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Lightning Settlement */}
           {settlementEvent && (
             <section>
-              <h2 className="text-sm font-semibold mb-3">
+              <h2 className="text-xs text-muted uppercase tracking-wider mb-3">
                 Lightning Settlement
               </h2>
-              <div className="border border-border rounded-lg divide-y divide-border">
-                {(settlementEvent.data.settlements as Array<{
-                  personaName: string;
-                  amountSats: number;
-                  paymentHash: string;
-                  bolt11: string;
-                }>).map((s, i) => (
+              <div className="border border-accent/30 rounded-lg bg-accent/5 divide-y divide-accent/10">
+                {(
+                  settlementEvent.data.settlements as Array<{
+                    personaName: string;
+                    seatIndex: number;
+                    amountSats: number;
+                    paymentHash: string;
+                    bolt11: string;
+                  }>
+                ).map((s, i) => (
                   <div key={i} className="p-4">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-semibold">{s.personaName}</span>
-                      <span className="text-sm font-semibold text-green-600">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-accent">&#x26A1;</span>
+                        <span className="text-sm font-semibold">
+                          {s.personaName}
+                        </span>
+                      </div>
+                      <span className="text-sm font-mono font-semibold text-green-600">
                         +{s.amountSats} sats
                       </span>
                     </div>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted w-20 shrink-0">payment hash</span>
-                        <code className="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded truncate">
+                    <div className="space-y-1.5 mt-3">
+                      <div>
+                        <span className="text-xs text-muted">payment_hash</span>
+                        <code className="block text-xs font-mono bg-white/60 border border-accent/10 px-2 py-1 rounded mt-0.5 break-all">
                           {s.paymentHash}
                         </code>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-muted w-20 shrink-0">bolt11</span>
-                        <code className="text-xs font-mono bg-zinc-100 px-2 py-0.5 rounded truncate max-w-md">
+                      <div>
+                        <span className="text-xs text-muted">bolt11 invoice</span>
+                        <code className="block text-xs font-mono bg-white/60 border border-accent/10 px-2 py-1 rounded mt-0.5 break-all leading-relaxed max-h-16 overflow-hidden">
                           {s.bolt11}
                         </code>
                       </div>
@@ -167,40 +221,50 @@ export default async function GamePage({
               </div>
             </section>
           )}
+
+          {/* Payoff summary (if settled but no lightning) */}
+          {payoffEvent && !settlementEvent && (
+            <section>
+              <h2 className="text-xs text-muted uppercase tracking-wider mb-3">
+                Payoff
+              </h2>
+              <div className="border border-border rounded-lg p-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  {(
+                    payoffEvent.data.payoffs as Array<{
+                      personaName: string;
+                      action: string;
+                      payoffSats: number;
+                    }>
+                  ).map((p, i) => (
+                    <div key={i} className="text-center">
+                      <p className="text-sm font-semibold">{p.personaName}</p>
+                      <ActionBadge action={p.action} />
+                      <p
+                        className={`text-lg font-semibold mt-1 ${
+                          p.payoffSats > 0 ? "text-green-600" : "text-red-500"
+                        }`}
+                      >
+                        {p.payoffSats > 0 ? "+" : ""}
+                        {p.payoffSats} sats
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          )}
+
+          {/* Empty state */}
+          {timeline.length === 0 && game.status === "waiting" && (
+            <div className="border border-dashed border-border rounded-lg p-12 text-center">
+              <p className="text-sm text-muted">
+                {game.participants.length} agents ready. Click &ldquo;Run Game&rdquo; to begin.
+              </p>
+            </div>
+          )}
         </div>
       </div>
-    </div>
-  );
-}
-
-function PublicEventRow({ event }: { event: TimelineEvent }) {
-  if (event.type === "game_started") {
-    return (
-      <div className="p-3 bg-zinc-50">
-        <p className="text-xs text-muted">
-          Game started &middot; {event.data.playerCount as number} players &middot;{" "}
-          {event.data.totalPool as number} sats pool
-        </p>
-      </div>
-    );
-  }
-
-  if (event.type === "decision") {
-    return (
-      <div className="p-3 bg-blue-50/50">
-        <p className="text-xs font-semibold">
-          {event.data.personaName as string}
-          <ActionBadge action={event.data.action as string} />
-        </p>
-        <p className="text-sm mt-1">{event.data.publicMessage as string}</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="p-3">
-      <p className="text-xs font-semibold">{event.data.personaName as string}</p>
-      <p className="text-sm mt-1">&ldquo;{event.data.publicMessage as string}&rdquo;</p>
     </div>
   );
 }
@@ -209,7 +273,11 @@ function ActionBadge({ action }: { action: string }) {
   const cooperative = action === "split" || action === "cooperate";
   return (
     <span
-      className={`inline-block text-xs px-2 py-0.5 rounded ml-2 ${cooperative ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}
+      className={`inline-block text-xs font-mono px-2 py-0.5 rounded ${
+        cooperative
+          ? "bg-green-100 text-green-700"
+          : "bg-red-100 text-red-700"
+      }`}
     >
       {action}
     </span>

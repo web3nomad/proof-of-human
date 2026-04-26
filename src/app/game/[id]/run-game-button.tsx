@@ -1,8 +1,16 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { runGameAction } from "@/app/actions";
+
+const PHASES = [
+  "Staking sats...",
+  "Agents are negotiating...",
+  "Reading bluffs and promises...",
+  "Final decisions locked in...",
+  "Settling on Lightning...",
+];
 
 export function RunGameButton({
   sessionId,
@@ -13,36 +21,40 @@ export function RunGameButton({
 }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [phase, setPhase] = useState("");
+  const [phaseIndex, setPhaseIndex] = useState(0);
 
-  async function handleRun() {
+  const handleRun = useCallback(async () => {
     setLoading(true);
-    setPhase("Starting game...");
+    setPhaseIndex(0);
+    const interval = setInterval(() => {
+      setPhaseIndex((i) => Math.min(i + 1, PHASES.length - 1));
+    }, 4000);
     try {
-      setPhase("AI agents are discussing...");
       await runGameAction(sessionId);
-      setPhase("Game complete!");
+      clearInterval(interval);
       router.refresh();
     } catch (e) {
       console.error(e);
-      setPhase("Error occurred");
-    } finally {
+      clearInterval(interval);
       setLoading(false);
     }
-  }
+  }, [sessionId, router]);
 
   useEffect(() => {
-    if (autoRun && !loading) {
+    if (autoRun) {
       handleRun();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [autoRun, handleRun]);
 
   if (loading) {
     return (
-      <div className="flex items-center gap-2 text-sm text-muted">
-        <span className="inline-block w-3 h-3 border-2 border-muted border-t-foreground rounded-full animate-spin" />
-        {phase}
+      <div className="flex items-center gap-3">
+        <div className="flex gap-1">
+          <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+          <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+          <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+        </div>
+        <span className="text-sm text-muted">{PHASES[phaseIndex]}</span>
       </div>
     );
   }
