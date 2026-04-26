@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Persona {
+  id          Int      @id @default(autoincrement())
+  name        String
+  background  String
+  traits      String[]
+  modelFamily String   @map("model_family")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  participants GameParticipant[]
+
+  @@map("personas")
+}
+
+model GameSession {
+  id        Int      @id @default(autoincrement())
+  gameType  String   @map("game_type")
+  status    String   @default("waiting")
+  config    Json     @default("{}")
+  timeline  Json[]   @default([])
+  result    Json?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  participants GameParticipant[]
+  payments     PaymentRecord[]
+
+  @@map("game_sessions")
+}
+
+model GameParticipant {
+  id          Int     @id @default(autoincrement())
+  sessionId   Int     @map("session_id")
+  personaId   Int     @map("persona_id")
+  seatIndex   Int     @map("seat_index")
+  modelName   String  @map("model_name")
+  stakeSats   Int     @default(0) @map("stake_sats")
+  payoffSats  Int     @default(0) @map("payoff_sats")
+  finalAction String? @map("final_action")
+
+  session GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  persona Persona     @relation(fields: [personaId], references: [id])
+
+  @@unique([sessionId, seatIndex])
+  @@map("game_participants")
+}
+
+model PaymentRecord {
+  id            Int      @id @default(autoincrement())
+  sessionId     Int      @map("session_id")
+  direction     String
+  amountSats    Int      @map("amount_sats")
+  lnbitsPayment Json?    @map("lnbits_payment")
+  status        String   @default("pending")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  session GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("payment_records")
+}
