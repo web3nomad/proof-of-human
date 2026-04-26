@@ -1,45 +1,72 @@
-import { createAnthropic } from "@ai-sdk/anthropic";
-import { createGoogleGenerativeAI } from "@ai-sdk/google";
-import { createOpenAI } from "@ai-sdk/openai";
+import { createAmazonBedrock } from "@ai-sdk/amazon-bedrock";
+import { createAzure } from "@ai-sdk/azure";
+import { createVertexAnthropic } from "@ai-sdk/google-vertex/anthropic";
+import { createVertex } from "@ai-sdk/google-vertex";
 
-const openai = createOpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const bedrock = createAmazonBedrock({
+  region: process.env.AWS_BEDROCK_REGION,
+  accessKeyId: process.env.AWS_BEDROCK_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_BEDROCK_SECRET_ACCESS_KEY,
 });
 
-const anthropic = createAnthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
+const azure = createAzure({
+  resourceName: process.env.AZURE_RESOURCE_NAME,
+  apiKey: process.env.AZURE_API_KEY,
 });
 
-const google = createGoogleGenerativeAI({
-  apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY,
+const azureEastUS2 = createAzure({
+  resourceName: process.env.AZURE_EASTUS2_RESOURCE_NAME,
+  apiKey: process.env.AZURE_EASTUS2_API_KEY,
+});
+
+const vertexClaude = createVertexAnthropic({
+  location: process.env.GOOGLE_VERTEX_CLAUDE_LOCATION,
+  project: process.env.GOOGLE_VERTEX_CLAUDE_PROJECT,
+  googleAuthOptions: {
+    credentials: {
+      client_email: process.env.GOOGLE_VERTEX_CLAUDE_CLIENT_EMAIL,
+      private_key: process.env.GOOGLE_VERTEX_CLAUDE_PRIVATE_KEY,
+    },
+  },
+});
+
+const vertex = createVertex({
+  location: process.env.GOOGLE_VERTEX_LOCATION,
+  project: process.env.GOOGLE_VERTEX_PROJECT,
+  googleAuthOptions: {
+    credentials: {
+      client_email: process.env.GOOGLE_VERTEX_CLIENT_EMAIL,
+      private_key: process.env.GOOGLE_VERTEX_PRIVATE_KEY,
+    },
+  },
 });
 
 export type ModelName =
-  | "gpt-4o"
   | "gpt-4.1-mini"
-  | "claude-sonnet-4"
+  | "gpt-4o"
   | "claude-haiku-4-5"
-  | "gemini-2.5-flash";
+  | "claude-sonnet-4"
+  | "gemini-3-flash";
 
 export function llm(modelName: ModelName) {
   switch (modelName) {
-    case "gpt-4o":
-      return openai("gpt-4o");
     case "gpt-4.1-mini":
-      return openai("gpt-4.1-mini");
-    case "claude-sonnet-4":
-      return anthropic("claude-sonnet-4-20250514");
+      return azure("gpt-4.1-mini");
+    case "gpt-4o":
+      return azureEastUS2("gpt-4o");
     case "claude-haiku-4-5":
-      return anthropic("claude-haiku-4-5-20251001");
-    case "gemini-2.5-flash":
-      return google("gemini-2.5-flash");
+      return vertexClaude("claude-haiku-4-5");
+    case "claude-sonnet-4":
+      return bedrock("us.anthropic.claude-sonnet-4-20250514-v1:0");
+    case "gemini-3-flash":
+      return vertex("gemini-3-flash-preview");
   }
 }
 
 const MODEL_POOL: ModelName[] = [
   "gpt-4.1-mini",
   "claude-haiku-4-5",
-  "gemini-2.5-flash",
+  "gemini-3-flash",
 ];
 
 export function randomModel(): ModelName {
