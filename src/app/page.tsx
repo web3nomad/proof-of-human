@@ -2,8 +2,11 @@ import Link from "next/link";
 import { listGamesAction, getStatsAction } from "./actions";
 import { NewGameButton } from "./new-game-button";
 
+type GameItem = Awaited<ReturnType<typeof listGamesAction>>[number];
+type Stats = Awaited<ReturnType<typeof getStatsAction>>;
+
 export default async function Home() {
-  const [games, stats] = await Promise.all([
+  const [games, stats]: [GameItem[], Stats] = await Promise.all([
     listGamesAction(),
     getStatsAction(),
   ]);

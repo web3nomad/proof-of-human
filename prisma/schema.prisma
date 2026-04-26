@@ -24,8 +24,11 @@ model GameSession {
   id        Int      @id @default(autoincrement())
   gameType  String   @map("game_type")
   status    String   @default("waiting")
+  /// [GameSessionConfig]
   config    Json     @default("{}")
+  /// [GameSessionTimeline]
   timeline  Json[]   @default([])
+  /// [GameSessionResult]
   result    Json?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -58,6 +61,7 @@ model PaymentRecord {
   sessionId     Int      @map("session_id")
   direction     String
   amountSats    Int      @map("amount_sats")
+  /// [LnbitsPaymentData]
   lnbitsPayment Json?    @map("lnbits_payment")
   status        String   @default("pending")
   createdAt     DateTime @default(now()) @map("created_at")

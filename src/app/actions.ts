@@ -20,7 +20,7 @@ export async function createGameAction(
     data: {
       gameType,
       status: "waiting",
-      config: gameConfig as unknown as Record<string, unknown>,
+      config: JSON.parse(JSON.stringify(gameConfig)),
       timeline: [],
     },
   });
@@ -110,13 +110,13 @@ export async function getStatsAction() {
       : 0;
 
   const byModel: Record<string, { total: number; cooperative: number }> = {};
-  for (const p of participants) {
-    if (!byModel[p.modelName]) {
-      byModel[p.modelName] = { total: 0, cooperative: 0 };
+  for (const participant of participants) {
+    if (!byModel[participant.modelName]) {
+      byModel[participant.modelName] = { total: 0, cooperative: 0 };
     }
-    byModel[p.modelName].total++;
-    if (p.finalAction && cooperationActions.includes(p.finalAction)) {
-      byModel[p.modelName].cooperative++;
+    byModel[participant.modelName].total++;
+    if (participant.finalAction && cooperationActions.includes(participant.finalAction)) {
+      byModel[participant.modelName].cooperative++;
     }
   }
 

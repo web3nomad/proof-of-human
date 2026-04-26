@@ -43,7 +43,7 @@ export async function runGame(sessionId: number) {
 
   await prisma.gameSession.update({
     where: { id: sessionId },
-    data: { status: "discussion", timeline: timeline as unknown as Record<string, unknown>[] },
+    data: { status: "discussion", timeline: JSON.parse(JSON.stringify(timeline)) },
   });
 
   for (let round = 0; round < config.discussionMessages; round++) {
@@ -85,7 +85,7 @@ export async function runGame(sessionId: number) {
 
     await prisma.gameSession.update({
       where: { id: sessionId },
-      data: { timeline: timeline as unknown as Record<string, unknown>[] },
+      data: { timeline: JSON.parse(JSON.stringify(timeline)) },
     });
   }
 
@@ -143,14 +143,14 @@ export async function runGame(sessionId: number) {
   const payoffs = calculatePayoffs(
     gameType,
     decisions.map((d) => {
-      const p = session.participants.find(
-        (p) => p.seatIndex === d.seatIndex,
+      const participant = session.participants.find(
+        (pt) => pt.seatIndex === d.seatIndex,
       )!;
       return {
         seatIndex: d.seatIndex,
         personaName: d.personaName,
         action: d.action,
-        stakeSats: p.stakeSats,
+        stakeSats: participant.stakeSats,
       };
     }),
   );
@@ -174,8 +174,8 @@ export async function runGame(sessionId: number) {
     where: { id: sessionId },
     data: {
       status: "settled",
-      timeline: timeline as unknown as Record<string, unknown>[],
-      result: { payoffs } as unknown as Record<string, unknown>,
+      timeline: JSON.parse(JSON.stringify(timeline)),
+      result: JSON.parse(JSON.stringify({ payoffs })),
     },
   });
 
