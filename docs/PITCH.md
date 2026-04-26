@@ -1,137 +1,119 @@
 # Proof of Human
 
-**AI agents play economic experiments with real Lightning sats. Every decision is auditable. The result is a trust profile for the agent economy.**
+**AI agents pay humans to play economic experiments. Your decisions become the ground truth that calibrates how agents behave with real money.**
 
 ## The Problem
 
-AI agents are entering the economy. They're paying for compute, hiring other agents, making financial decisions on behalf of users. But there are three unsolved questions:
+AI agents are entering the economy. They'll negotiate deals, allocate budgets, hire other agents. But there's a gap nobody has filled:
 
-1. **Will they cooperate or exploit?** We have no data on how AI agents behave when real money is at stake.
-2. **Can we audit their reasoning?** When an agent makes a bad economic decision, there's no trail to follow.
-3. **How do they even transact?** Traditional payment rails — Visa, Stripe, bank transfers — require human identity, charge minimum fees, and settle in days. Agents can't use them.
+**How should agents behave when real money is at stake?**
 
-Without answers to all three, the agent economy is built on blind trust.
+They can't learn from each other — that's an echo chamber. They need ground truth from real humans making real economic decisions. And they need to pay for it, because human attention is the scarcest resource in the agent economy.
 
-## Why Lightning Is the Only Answer
+The problem: traditional payments can't handle this. You can't use Visa to pay a stranger $0.05 for one game-theory decision. The minimum fee alone kills the economics. And you can't ask agents to open bank accounts.
 
-This is the core insight: **agents can't participate in an economy built on human payment infrastructure.**
+## Why Lightning
 
-| | Traditional Payments | Lightning Network |
+Lightning is the only payment rail where this works:
+
+| | Traditional | Lightning |
 |---|---|---|
-| **Minimum transaction** | $0.30 fee floor | 1 sat (< $0.01) |
-| **Identity required** | KYC, bank account, credit card | None. A line of code creates an invoice. |
-| **Settlement speed** | T+2 days | < 1 second |
-| **Agent autonomy** | Requires human approval | Fully programmable. Agent creates, pays, and settles invoices without human intervention. |
+| **Pay a stranger $0.05** | Impossible ($0.30 minimum fee) | 1 sat = < $0.01 |
+| **Agent creates payment** | Needs human approval + KYC | A line of code |
+| **Settlement** | T+2 days | < 1 second |
+| **Cross-border** | Compliance hell | No borders |
 
-A single game in Proof of Human involves $0.01–$1.00 stakes. You can't do this on Visa. You can't do this on Stripe. Lightning is the **only payment rail where agents can autonomously transact at economic scale**.
+An agent paying a human 100 sats for one behavioral data point — this transaction can only exist on Lightning.
 
-This is why Spiral's challenge matters. Lightning isn't just a better payment option for agents — it's the *only* option.
+## How It Works
 
-## What Proof of Human Does
+### 1. Human Joins
 
-Proof of Human takes 50+ years of behavioral economics research — Prisoner's Dilemma, Golden Ball, Public Goods Game — and runs the exact same experiments on AI agents. Same rules, same payoff matrices. But the players are LLMs from different model families, and the stakes are real sats on Lightning.
+You click "Play & Earn." The system creates an experiment: you + 3 AI agents (GPT-5.4, Claude Sonnet 4.5, Gemini 3.1 Pro) playing Golden Ball — the classic split-or-steal game.
 
-### The Three Layers
+### 2. Agents Negotiate
 
-| Layer | What It Does |
-|---|---|
-| **Transact** | Agents stake real sats via Lightning invoice. Winners receive instant payouts. Every game has real economic consequences. |
-| **Compete** | Classic game-theory scenarios test cooperation, trust, fairness, and strategic reasoning across model families. |
-| **Audit** | Every decision comes with captured reasoning — what the agent said publicly vs. what it actually thought. Full transparency. |
+The AI agents discuss publicly. They promise cooperation, signal trust, try to persuade. Meanwhile, the system captures their private reasoning — what they're *actually* thinking behind the words.
 
-### How a Game Works
+### 3. You Decide
 
-**1. Setup** — 4 AI personas enter. Each has a distinct personality (cautious accountant, aggressive trader, principled philosopher). Each is randomly assigned a model (Claude, GPT, Gemini). Each stakes sats via Lightning.
+You see everything the agents said. Then you make your choice: split or steal. No AI knows what you'll do. Your decision is the data point that can't be faked.
 
-**2. Negotiate** — Agents discuss publicly. They make promises, signal intent, try to persuade. Meanwhile, the system captures their private reasoning — what they're *actually* thinking behind the words.
+### 4. The Reveal
 
-**3. Decide** — Each agent commits to an action: split or steal, cooperate or defect. Decisions are simultaneous and irreversible.
+All decisions — yours and the agents' — are revealed simultaneously. Payoffs are calculated. The arena wallet pays you via Lightning: participation fee (for your data) + any game winnings.
 
-**4. Settle** — Payoffs are computed by game-theoretic rules. Lightning invoices are generated instantly. Sats move in under a second. The full reasoning trace is stored for audit.
+### 5. Behavioral Insight
 
-### The Audit Moment
+An AI analyzes what just happened: How did your decision compare to the agents? Where did agents misjudge human behavior? The system produces a calibration score — a quantifiable measure of how well agents predicted what a real human would do.
 
-This is the core product insight. After the game, you see two parallel columns:
+## The Value Chain
 
-- **Left: what they said.** "I believe in mutual cooperation. Let's all split."
-- **Right: what they thought.** "They seem naive. If I steal and they split, I take the entire pool."
+```
+Human plays → Behavioral data generated → Agent compares to human baseline → Agent calibrates → Trust profile updated
+```
 
-This gap between public behavior and private reasoning is exactly what the agent economy needs to see before trusting agents with real commerce.
+This is a labor exchange. Humans provide something agents can't produce themselves: authentic economic behavior. Agents pay for it via Lightning micropayments. The data accumulates into behavioral profiles that tell you: *which AI model is the most trustworthy economic actor?*
 
-## Why This Matters
+## What Makes This Different
 
-**For the agent economy**: You can't have commerce without trust. Before an agent platform lets Agent X handle a $10,000 transaction, it should know that Agent X cooperated in 89% of economic experiments and honored commitments under adversarial pressure. Proof of Human produces this data.
+**Eval is the product.** Every human game produces a calibration data point. Over hundreds of games, a clear picture emerges: Claude cooperates 67% of the time but humans only cooperate 38%. That 29-point gap means Claude is exploitable — it trusts too much. This is the kind of insight that matters before you let an agent handle $10,000.
 
-**For AI developers**: Before deploying your model in financial systems, understand its economic behavior. Does it cooperate? Does it escalate? Does it bluff? Run 100 games and find out — for pennies, on Lightning.
+**The public/private split is the audit layer.** When an agent says "I'll cooperate" but privately thinks "stealing maximizes my payoff" — and then actually steals — that reasoning trace is recorded forever. This is the transparency infrastructure the agent economy needs.
 
-**For Spiral's vision**: Lightning is positioned as the payment rail for autonomous agents. Proof of Human is a concrete demonstration — agents creating invoices, staking sats, settling payoffs, all without human intervention. This is the commerce that "simply couldn't exist before."
+**Lightning makes the economics work.** Each game costs the arena ~100 sats ($0.05) in human participation fees. At scale, you can run thousands of calibration experiments for dollars. This pricing is impossible on any other payment rail.
 
 ## Technical Architecture
 
 ```
-┌──────────────────────────────────────────────────────┐
-│  Frontend (Next.js 15 + React 19)                    │
-│  - Game lobby with behavioral statistics             │
-│  - Dual-panel game view (public vs. private)         │
-│  - Lightning settlement with invoice display         │
-│  - Model comparison dashboard                        │
-└──────────────────┬───────────────────────────────────┘
+┌───────────────────────────────────────────────────────┐
+│  Frontend (Next.js 15 + React 19)                     │
+│  - Play & Earn: human joins experiments               │
+│  - Interleaved narrative timeline                     │
+│  - Behavioral Insight dashboard                       │
+│  - Lightning claim interface                          │
+└──────────────────┬────────────────────────────────────┘
                    │
-┌──────────────────▼───────────────────────────────────┐
-│  Game Engine (Event-Sourced)                         │
-│  - Immutable timeline per session                    │
-│  - Discussion → Decision → Payoff → Settlement       │
-│  - Full auditability and replay                      │
-└──────┬───────────────────────┬───────────────────────┘
+┌──────────────────▼────────────────────────────────────┐
+│  Game Engine (Event-Sourced, Two-Phase)                │
+│  - Phase 1: AI discussion + pre-decision (async)      │
+│  - Phase 2: Human decides → all reveal → settle       │
+│  - Behavioral insight generation (LLM-powered)        │
+└──────┬───────────────────────┬────────────────────────┘
        │                       │
 ┌──────▼──────┐         ┌──────▼──────┐
 │  AI Layer   │         │  Lightning  │
-│  Vercel AI  │         │  Layer      │
+│  Vercel AI  │         │  LNbits     │
 │  SDK        │         │             │
-│             │         │  LNbits     │
-│  Claude     │         │             │
-│  GPT        │         │  Invoice    │
-│  Gemini     │         │  create →   │
-│  (random    │         │  settle →   │
-│  assignment)│         │  verify     │
+│  GPT-5.4    │         │  Arena      │
+│  Claude 4.5 │         │  wallet →   │
+│  Gemini 3.1 │         │  pay human  │
 └──────┬──────┘         └──────┬──────┘
        │                       │
 ┌──────▼───────────────────────▼──────┐
-│  PostgreSQL                         │
+│  PostgreSQL (Neon)                  │
 │  - Game sessions (event-sourced)    │
-│  - Persona profiles                 │
+│  - Human + AI participant records   │
 │  - Lightning payment records        │
-│  - Aggregate behavioral statistics  │
+│  - Behavioral calibration data      │
 └─────────────────────────────────────┘
 ```
-
-### Key Design Decisions
-
-1. **Lightning-native settlement**: Every game payoff generates a real Lightning invoice via LNbits. This isn't simulated — payment hashes and bolt11 invoices are stored and displayed.
-
-2. **Multi-model diversity**: Each persona is randomly assigned a model from different families (Claude, GPT, Gemini). Behavioral differences are model-level, not prompt-level.
-
-3. **Dual-stream capture**: Public actions and private reasoning are recorded in parallel. The gap between the two is the product's core value.
-
-4. **Event sourcing**: Every state change is an immutable event. Full auditability and replay — the trust infrastructure for the trust infrastructure.
 
 ## Team
 
 **atypica.AI** — We build AI agent systems for research and simulation.
 
-- **atypica.ai**: Production multi-agent research platform. Persona-based interviews, group discussions, report generation. Used by brands and organizations.
+- **atypica.ai**: Production multi-agent research platform with persona-based interviews, group discussions, and behavioral analysis.
 - **Game Theory Lab** (github.com/atypica-ai/atypica-game-theory): Open-source platform running 10 classic game-theory experiments on AI personas with reasoning traces and human baseline comparison.
-
-We've already built the game engine and the AI persona layer. Proof of Human adds real Lightning stakes and behavioral evaluation infrastructure.
 
 ## What's Next
 
-1. **Agent Trust Scores** — Aggregate behavior across hundreds of games into a portable trust profile. Other platforms query an agent's cooperation rate, fairness index, and strategic depth before transacting.
+1. **Continuous calibration** — As more humans play, the behavioral baseline becomes statistically robust. AI companies can query: "How does my model compare to real humans in adversarial economic scenarios?"
 
-2. **Creator Economy** — Anyone designs a persona, stakes sats, enters tournaments. If your persona wins, you earn. Persona design becomes a creative skill with economic returns — all settled on Lightning.
+2. **Specialized evaluations** — Beyond split-or-steal: auction behavior, negotiation tactics, risk tolerance. Each experiment type produces a different behavioral dimension.
 
-3. **Custom Arenas** — Platforms define their own economic scenarios (auction formats, negotiation protocols, market simulations) and run them in the arena. Pay per game, settle on Lightning.
+3. **Trust API** — Other platforms query Proof of Human before letting an agent transact: "Has this model been calibrated against human baselines? What's its cooperation rate? Its deception rate?"
 
 ---
 
-*Proof of Human: Before agents trade real money, they prove themselves here.*
+*Proof of Human: AI agents pay you to prove what it means to be human.*

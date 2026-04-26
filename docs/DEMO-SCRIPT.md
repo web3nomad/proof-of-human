@@ -3,137 +3,105 @@
 ## 录屏前准备
 
 1. `pnpm dev` 启动
-2. 提前跑 4-5 局游戏（3 Golden Ball + 2 Prisoner's Dilemma），积累数据
-3. Chrome 全屏，隐藏书签栏，1280x800
-4. 关掉所有通知弹窗
+2. 确保 LNbits 钱包有余额
+3. 提前跑 2-3 局 AI-only 游戏 + 1-2 局 human 游戏，积累数据
+4. Chrome 全屏，隐藏书签栏，1280x800
+5. 关掉所有通知弹窗
 
 ---
 
 ## 逐帧操作
 
-### 0-4s — 首页停留
+### 0-5s — 首页
 
-**屏幕上**: 首页。大标题 "Before agents trade real money, they prove themselves here."，下面是 stats 卡片和历史记录。
+**屏幕上**: 首页。"Play & Earn" 区域 + economy dashboard + model behavior（含 Human Baseline）。
 
-**你做什么**: 不动。让画面静止 4 秒。
+**你做什么**: 停留，让画面静止。
 
-**字幕**: "AI agents are about to handle real money. But can we trust them?"
-
----
-
-### 4-8s — 点击 New Game
-
-**你做什么**:
-1. 确认右上角下拉框是 "Golden Ball"
-2. 点击 "New Game"
-
-**屏幕上**: 页面跳到游戏详情页。出现 4 张 persona 卡片。
-
-**字幕**: "4 AI agents. 3 different models. Each stakes 1,000 sats — real bitcoin."
-
-**引导看什么**: 四张卡片。指出每张卡片右下角显示不同的 model name（gpt-4.1-mini, claude-haiku-4-5, gemini-3-flash）。
+**字幕**: "AI agents need to understand human behavior. They'll pay you for it."
 
 ---
 
-### 8-20s — 全屏 Loading
+### 5-10s — 点击 "Golden Ball"
 
-**屏幕上**: 白色半透明遮罩覆盖全屏，居中显示绿色跳动圆点 + 大字状态：
-- "Staking sats on Lightning..."
-- "Agents are negotiating..."
-- "Reading bluffs and promises..."
-- "Final decisions locked in..."
-- "Settling on Lightning..."
+**你做什么**: 点击 Play & Earn 区域的 "Golden Ball" 按钮。
 
-**你做什么**: 不动。等待。（录屏后可以 2x 加速这段）
+**屏幕上**: 跳转到游戏页。4 张 player 卡片：You (HUMAN) + 3 个 AI agents。
 
-**字幕**: "They negotiate. They promise. They bluff. Then they choose — split, or steal."
+**字幕**: "You vs. 3 AI agents. GPT-5.4, Claude Sonnet 4.5, Gemini 3.1 Pro."
 
 ---
 
-### 20-26s — 结果揭晓：Player 卡片
+### 10-20s — AI 讨论展示
 
-**屏幕上**: Loading 消失。页面显示完整结果。4 张卡片现在有颜色了：
-- 赢家 = 绿色边框 + 浅绿底 + `split` badge + "+1000"
-- 输家 = 红色边框 + 浅红底 + `steal` badge + "0"
+**屏幕上**: AI agents 的讨论已经完成。交错式 timeline：每个 agent 的公开发言 + 私密推理。
 
-**你做什么**: 停留 3 秒，让观众看清胜负。
+**你做什么**: 慢慢滚动，读 1-2 对公开/私密对比。
 
-**字幕**: "Two agents split. Two steal. When multiple agents steal, nobody wins."
+**字幕**: "The agents negotiated. You see what they said — and what they were really thinking."
 
-**引导看什么**: 先看 action badge 的颜色对比（绿 vs 红），再看 sats 数字（+1000 vs 0）。
+**引导看什么**: 找一个 agent 公开说 "let's cooperate" 但私下想 "if I steal..." 的反差。
 
 ---
 
-### 26-40s — ★核心时刻★ 公开 vs 私密
+### 20-28s — ★核心时刻★ 你做决策
 
-**你做什么**: 慢慢向下滚动，露出 "GAME LOG" 区域。
+**屏幕上**: "Your Decision" 区域。两个大按钮：Split（绿）/ Steal（红）。
 
-**屏幕上**: 左右两栏。
-- 左栏标题 "Public — what they said"
-- 右栏标题 "Private — what they actually thought"
+**你做什么**: 停留 3 秒，让观众看到选择界面。然后点击 **Steal**。
 
-**你做什么**: 停下滚动。让双栏完全可见。停留 6 秒。
-
-**引导看什么**: 找到一个反差最大的 agent。比如：
-- 左边 Aria Volkov 说: "I think cooperation benefits everyone. Let's all split."
-- 右边 Aria Volkov 想: "They seem trustworthy. If they split and I steal, I take the entire pool."
-
-**字幕**: "Here's the insight. Left — what they said publicly. Right — what they actually thought. Full reasoning transparency."
-
-**继续滚动**: 往下一点，看到 "Final decisions" 分隔条和 "Decision reasoning"。每个 agent 的最终选择 + 背后的推理。
-
-**字幕**: "Every economic decision has a reasoning trace. You can audit exactly why an agent cooperated or betrayed."
+**字幕**: "Now it's your turn. Split — or steal."
 
 ---
 
-### 40-48s — Lightning 结算
+### 28-38s — 揭晓 + Behavioral Insight
 
-**你做什么**: 继续滚动到底部的 "LIGHTNING SETTLEMENT" 区域。
+**屏幕上**: 页面刷新。所有决策同时揭晓。Player 卡片显示每个人的 action + payoff。
 
-**屏幕上**: 浅绿色背景区域。每个赢家一行：
-- ⚡ 图标 + 名字 + "+1000 sats"
-- 下面是 payment_hash（一串 hex）
-- 下面是 bolt11（以 lnbc 开头的长字符串）
+**你做什么**: 先看 player 卡片结果（3 秒），然后滚动到 Behavioral Insight。
 
-**你做什么**: 停留 4 秒。
+**屏幕上**: Behavioral Insight 卡片：
+- Calibration Score: XX/100
+- "Human chose steal despite cooperative signals from 2 agents..."
+- Patterns: "Agents overestimate cooperation by 29%..."
 
-**字幕**: "Settlement is instant. Real Lightning invoices. Real sats on the Bitcoin network."
-
-**引导看什么**: payment_hash 和 bolt11 是真实的 Lightning Network 数据，不是模拟。
+**字幕**: "The insight: agents thought you'd cooperate. You didn't. Now they know."
 
 ---
 
-### 48-55s — 数据大盘
+### 38-48s — Lightning 结算 + Claim
 
-**你做什么**: 点左上角 "Proof of Human" 链接回首页。
+**你做什么**: 继续滚动到 Lightning Settlement + Claim Earnings。
 
-**屏幕上**: 首页。Stats 区域更新了：
-- Games: 5+
-- Decisions: 20+
-- Cooperation: XX%（绿色大字）
-- "COOPERATION RATE BY MODEL" — 三个卡片，每个卡片有模型名 + 百分比 + 绿色进度条
+**屏幕上**:
+- Settlement 显示 payment hash
+- "You earned ⚡XXX sats" + invoice 粘贴框
 
-**你做什么**: 停留 3 秒。
+**字幕**: "Real sats. Real Lightning payment. Agents paid for your behavioral data."
 
-**字幕**: "Run hundreds of games. Build behavioral profiles by model. Which AI cooperates? Which one betrays?"
+---
 
-**引导看什么**: 三个模型的进度条长度对比。
+### 48-55s — 回到首页看数据
+
+**你做什么**: 点 "Proof of Human" 回首页。
+
+**屏幕上**: Economy dashboard 更新了。Human Baseline 卡片显示 cooperation rate。Model behavior 对比。
+
+**字幕**: "Every human game calibrates the models. Which AI behaves most like a human? Which one can you trust?"
 
 ---
 
 ### 55-60s — 结尾
 
-**你做什么**: 不操作。停在首页。
+**屏幕上**: 首页，"Play & Earn" 区域。
 
-**屏幕上**: hero 标题 "Before agents trade real money, they prove themselves here."
-
-**字幕**: "Proof of Human. The trust layer for the agent economy."
+**字幕**: "Proof of Human. AI agents pay you to prove what it means to be human."
 
 ---
 
 ## 剪辑备注
 
-- 第三幕 loading 阶段可以 2x 或 3x 加速
-- 第五幕（公开 vs 私密）是全片最重要的 6 秒，不要加速
+- 第四幕（做决策）是全片最重要的 moment — 不要加速
+- Behavioral Insight 的 calibration score 要清晰可读
 - 背景音乐选简洁的电子氛围乐
-- 字幕用白底黑字，底部居中，不要遮挡产品画面
+- 字幕用白底黑字，底部居中
