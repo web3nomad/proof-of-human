@@ -97,7 +97,7 @@ export async function getStatsAction() {
       session: { status: "settled" },
       finalAction: { not: null },
     },
-    select: { finalAction: true, modelName: true },
+    select: { finalAction: true, modelName: true, stakeSats: true },
   });
 
   const cooperationActions = ["split", "cooperate"];
@@ -108,6 +108,13 @@ export async function getStatsAction() {
     participants.length > 0
       ? Math.round((cooperators.length / participants.length) * 100)
       : 0;
+
+  const totalSatsStaked = participants.reduce((sum, p) => sum + p.stakeSats, 0);
+
+  const paymentAgg = await prisma.paymentRecord.aggregate({
+    _sum: { amountSats: true },
+  });
+  const totalSatsSettled = paymentAgg._sum.amountSats ?? 0;
 
   const byModel: Record<string, { total: number; cooperative: number }> = {};
   for (const participant of participants) {
@@ -126,5 +133,38 @@ export async function getStatsAction() {
     cooperationRate: Math.round((stats.cooperative / stats.total) * 100),
   }));
 
-  return { totalGames, cooperationRate, totalDecisions: participants.length, modelStats };
+  const featuredGame = await prisma.gameSession.findFirst({
+    where: {
+      status: "settled",
+      participants: {
+        some: { finalAction: { in: ["steal", "defect"] } },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+    include: {
+      participants: {
+        include: { persona: true },
+        orderBy: { seatIndex: "asc" },
+      },
+    },
+  }) ?? await prisma.gameSession.findFirst({
+    where: { status: "settled" },
+    orderBy: { createdAt: "desc" },
+    include: {
+      participants: {
+        include: { persona: true },
+        orderBy: { seatIndex: "asc" },
+      },
+    },
+  });
+
+  return {
+    totalGames,
+    cooperationRate,
+    totalDecisions: participants.length,
+    totalSatsStaked,
+    totalSatsSettled,
+    modelStats,
+    featuredGame,
+  };
 }
